@@ -4,7 +4,6 @@ import axios from "axios";
 
 const CustomerForm = () => {
     const [formData, setFormData] = useState({
-        username: "",
         fatherName: "",
         motherName: "",
         email: "",
@@ -52,15 +51,6 @@ const CustomerForm = () => {
                 {/* Page 1 */}
                 {page === 1 && (
                     <>
-                        <TextField
-                            label="Username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
                         <TextField
                             label="Father's Name"
                             name="fatherName"
