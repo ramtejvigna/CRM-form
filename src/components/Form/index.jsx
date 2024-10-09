@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { TextField, Button, MenuItem } from "@mui/material";
 import axios from "axios";
 
 const CustomerForm = () => {
@@ -18,8 +17,6 @@ const CustomerForm = () => {
         additionalPreferences: "",
     });
 
-    const [page, setPage] = useState(1);
-
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -37,231 +34,87 @@ const CustomerForm = () => {
         }
     };
 
-    const handleNextPage = () => setPage((prevPage) => prevPage + 1);
-    const handlePreviousPage = () => setPage((prevPage) => prevPage - 1);
-
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full"
-            >
-                <h2 className="text-2xl font-bold mb-6 text-center">Add Customer</h2>
+        <div className="flex flex-row min-h-screen">
+            <div className="flex flex-col justify-center w-1/2 p-20">
+                <h2 className="text-4xl font-bold mb-6">CRM-vedic</h2>
+                <form
+                    onSubmit={handleSubmit}
+                    className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full"
+                >
+                    {[
+                        { label: "Father's Name", name: "fatherName", type: "text", placeholder: "Father Name" },
+                        { label: "Mother's Name", name: "motherName", type: "text", placeholder: "Mother Name" },
+                        { label: "Email", name: "email", type: "email", placeholder: "Email" },
+                        { label: "WhatsApp Number", name: "whatsappNumber", type: "text", placeholder: "WhatsApp Number" },
+                        { label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Other"] },
+                        { label: "Baby Birth Date", name: "babyBirthDate", type: "date" },
+                        { label: "Baby Birth Time", name: "babyBirthTime", type: "time" },
+                        { label: "Birthplace", name: "birthplace", type: "text", placeholder: "Birthplace" },
+                        { label: "Preferred Starting Letter", name: "preferredStartingLetter", type: "text", placeholder: "Preferred Starting Letter" },
+                        { label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Preferred God" },
+                        { label: "Reference Name", name: "referenceName", type: "text", placeholder: "Reference Name" },
+                        { label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Additional Preferences" },
+                    ].map((input, index) => (
+                        <div className="relative mb-6" key={index}>
+                            {input.type === "select" ? (
+                                <>
+                                    <select
+                                        name={input.name}
+                                        value={formData[input.name]}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
+                                    >
+                                        <option value="" disabled>
+                                            {input.label}
+                                        </option>
+                                        {input.options.map((option, i) => (
+                                            <option key={i} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label className=" bg-white px-2 absolute left-2 top-2 text-sm text-gray-600 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-[-14px] peer-focus:text-blue-400 peer-focus:text-sm transition-all duration-300 ease-in-out transform -translate-y-2 scale-75 opacity-0 peer-focus:opacity-100 peer-focus:translate-y-0">
+                                        {input.label}
+                                    </label>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="relative mb-6" key={index}>
+                                        <p className="text-sm mb-2 ml-1 peer-focus:hidden">{input.label}</p>
+                                        <input
+                                            type={input.type}
+                                            name={input.name}
+                                            value={formData[input.name]}
+                                            onChange={handleChange}
+                                            placeholder={input.placeholder || input.label}
+                                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
+                                        />
+                                        <label className="bg-white px-2 absolute left-2 top-2 text-sm text-gray-600 peer-placeholder-shown:text-gray-600 peer-focus:top-[-14px] peer-focus:text-blue-400 peer-focus:text-sm transition-all duration-300 ease-in-out transform -translate-y-2 scale-75 opacity-0 peer-focus:opacity-100 peer-focus:translate-y-0">
+                                            {input.label}
+                                        </label>
+                                    </div>
 
-                {/* Page 1 */}
-                {page === 1 && (
-                    <>
-                        <TextField
-                            label="Father's Name"
-                            name="fatherName"
-                            value={formData.fatherName}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="Mother's Name"
-                            name="motherName"
-                            value={formData.motherName}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <Button
-                            onClick={handleNextPage}
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            className="mt-6"
-                        >
-                            Next
-                        </Button>
-                    </>
-                )}
-
-                {/* Page 2 */}
-                {page === 2 && (
-                    <>
-                        <TextField
-                            label="Email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="WhatsApp Number"
-                            name="whatsappNumber"
-                            value={formData.whatsappNumber}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="Baby Gender"
-                            name="babyGender"
-                            value={formData.babyGender}
-                            onChange={handleChange}
-                            select
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        >
-                            <MenuItem value="Male">Male</MenuItem>
-                            <MenuItem value="Female">Female</MenuItem>
-                            <MenuItem value="Other">Other</MenuItem>
-                        </TextField>
-
-                        <div className="flex justify-between">
-                            <Button
-                                onClick={handlePreviousPage}
-                                variant="contained"
-                                fullWidth
-                                className="mt-6 mr-2"
-                            >
-                                Back
-                            </Button>
-                            <Button
-                                onClick={handleNextPage}
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                className="mt-6 ml-2"
-                            >
-                                Next
-                            </Button>
+                                </>
+                            )}
                         </div>
-                    </>
-                )}
-
-                {/* Page 3 */}
-                {page === 3 && (
-                    <>
-                        <TextField
-                            label="Baby Birth Date"
-                            name="babyBirthDate"
-                            value={formData.babyBirthDate}
-                            onChange={handleChange}
-                            type="date"
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <TextField
-                            label="Baby Birth Time"
-                            name="babyBirthTime"
-                            value={formData.babyBirthTime}
-                            onChange={handleChange}
-                            type="time"
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <TextField
-                            label="Birthplace"
-                            name="birthplace"
-                            value={formData.birthplace}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-
-                        <div className="flex justify-between">
-                            <Button
-                                onClick={handlePreviousPage}
-                                variant="contained"
-                                fullWidth
-                                className="mt-6 mr-2"
-                            >
-                                Back
-                            </Button>
-                            <Button
-                                onClick={handleNextPage}
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                className="mt-6 ml-2"
-                            >
-                                Next
-                            </Button>
-                        </div>
-                    </>
-                )}
-
-                {/* Page 4 */}
-                {page === 4 && (
-                    <>
-                        <TextField
-                            label="Preferred Starting Letter"
-                            name="preferredStartingLetter"
-                            value={formData.preferredStartingLetter}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="Preferred God"
-                            name="preferredGod"
-                            value={formData.preferredGod}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="Reference Name"
-                            name="referenceName"
-                            value={formData.referenceName}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="Additional Preferences"
-                            name="additionalPreferences"
-                            value={formData.additionalPreferences}
-                            onChange={handleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-
-                        <div className="flex justify-between">
-                            <Button
-                                onClick={handlePreviousPage}
-                                variant="contained"
-                                fullWidth
-                                className="mt-6 mr-2"
-                            >
-                                Back
-                            </Button>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                className="mt-6 ml-2"
-                            >
-                                Submit
-                            </Button>
-                        </div>
-                    </>
-                )}
-            </form>
+                    ))}
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                    >
+                        Submit
+                    </button>
+                </form>
+            </div>
+            {/* Image Container */}
+            <div className="w-1/2 flex justify-end">
+                <img
+                    src='../../../public/images.jpeg'
+                    alt="CRM Illustration"
+                    className="w-full h-full object-cover"
+                />
+            </div>
         </div>
     );
 };
