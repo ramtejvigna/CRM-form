@@ -35,8 +35,8 @@ const CustomerForm = () => {
     };
 
     return (
-        <div className="flex flex-row min-h-screen">
-            <div className="flex flex-col justify-center w-1/2 p-20">
+        <div className="md:flex md:flex-row min-h-screen ">
+            <div className="flex flex-col justify-center items-center pt-10 md:w-1/2 md:p-20">
                 <h2 className="text-4xl font-bold mb-6">CRM-vedic</h2>
                 <form
                     onSubmit={handleSubmit}
@@ -47,7 +47,7 @@ const CustomerForm = () => {
                         { label: "Mother's Name", name: "motherName", type: "text", placeholder: "Mother Name" },
                         { label: "Email", name: "email", type: "email", placeholder: "Email" },
                         { label: "WhatsApp Number", name: "whatsappNumber", type: "text", placeholder: "WhatsApp Number" },
-                        { label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Other"] },
+                        { label: "Baby Gender", name: "babyGender", type: "select", placeholder: "Select Baby Gender", options: ["Male", "Female", "Other"] },
                         { label: "Baby Birth Date", name: "babyBirthDate", type: "date" },
                         { label: "Baby Birth Time", name: "babyBirthTime", type: "time" },
                         { label: "Birthplace", name: "birthplace", type: "text", placeholder: "Birthplace" },
@@ -59,15 +59,13 @@ const CustomerForm = () => {
                         <div className="relative mb-6" key={index}>
                             {input.type === "select" ? (
                                 <>
+                                    <p className="text-sm mb-2 ml-1 peer-focus:hidden">{input.placeholder}</p>
                                     <select
                                         name={input.name}
                                         value={formData[input.name]}
                                         onChange={handleChange}
                                         className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
                                     >
-                                        <option value="" disabled>
-                                            {input.label}
-                                        </option>
                                         {input.options.map((option, i) => (
                                             <option key={i} value={option}>
                                                 {option}
@@ -90,9 +88,6 @@ const CustomerForm = () => {
                                             placeholder={input.placeholder || input.label}
                                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
                                         />
-                                        <label className="bg-white px-2 absolute left-2 top-2 text-sm text-gray-600 peer-placeholder-shown:text-gray-600 peer-focus:top-[-14px] peer-focus:text-blue-400 peer-focus:text-sm transition-all duration-300 ease-in-out transform -translate-y-2 scale-75 opacity-0 peer-focus:opacity-100 peer-focus:translate-y-0">
-                                            {input.label}
-                                        </label>
                                     </div>
 
                                 </>
@@ -108,7 +103,7 @@ const CustomerForm = () => {
                 </form>
             </div>
             {/* Image Container */}
-            <div className="w-1/2 flex justify-end">
+            <div className="hidden w-1/2 md:flex justify-end">
                 <img
                     src='../../../public/images.jpeg'
                     alt="CRM Illustration"
