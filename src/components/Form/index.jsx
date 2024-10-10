@@ -105,7 +105,7 @@ const CustomerForm = () => {
             {/* Image Container */}
             <div className="hidden w-1/2 md:flex justify-end">
                 <img
-                    src='../../../public/images.jpeg'
+                    src='../../../images.jpeg'
                     alt="CRM Illustration"
                     className="w-full h-full object-cover"
                 />
