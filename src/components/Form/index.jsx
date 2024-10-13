@@ -66,15 +66,20 @@ const CustomerForm = () => {
                                         onChange={handleChange}
                                         className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
                                     >
+                                        {/* Placeholder option with an empty value */}
+                                        <option value="" disabled>
+                                            {input.placeholder} {/* Shows the placeholder "Select Baby Gender" */}
+                                        </option>
                                         {input.options.map((option, i) => (
                                             <option key={i} value={option}>
                                                 {option}
                                             </option>
                                         ))}
                                     </select>
-                                    <label className=" bg-white px-2 absolute left-2 top-2 text-sm text-gray-600 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-[-14px] peer-focus:text-blue-400 peer-focus:text-sm transition-all duration-300 ease-in-out transform -translate-y-2 scale-75 opacity-0 peer-focus:opacity-100 peer-focus:translate-y-0">
+                                    <label className="bg-white px-2 absolute left-2 top-2 text-sm text-gray-600 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-[-14px] peer-focus:text-blue-400 peer-focus:text-sm transition-all duration-300 ease-in-out transform -translate-y-2 scale-75 opacity-0 peer-focus:opacity-100 peer-focus:translate-y-0">
                                         {input.label}
                                     </label>
+
                                 </>
                             ) : (
                                 <>
