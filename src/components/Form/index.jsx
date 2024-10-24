@@ -27,7 +27,7 @@ const CustomerForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3000/customers/addCustomerWithAssignment", formData);
+            const response = await axios.post("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", formData);
             console.log("Customer added successfully:", response.data);
         } catch (error) {
             console.error("Error adding customer:", error);
