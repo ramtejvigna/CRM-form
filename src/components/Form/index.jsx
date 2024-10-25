@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText } from 'lucide-react';
 
 const CustomerForm = () => {
     const [formData, setFormData] = useState({
@@ -27,94 +28,177 @@ const CustomerForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", formData);
-            console.log("Customer added successfully:", response.data);
+            const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                alert('Successfully submitted!');
+            }
         } catch (error) {
             console.error("Error adding customer:", error);
         }
     };
 
+    const features = [
+        {
+            icon: <Star className="w-8 h-8 text-purple-500" />,
+            title: "Vedic Name Selection",
+            description: "Carefully chosen names based on ancient Vedic principles"
+        },
+        {
+            icon: <Heart className="w-8 h-8 text-red-500" />,
+            title: "Personalized Service",
+            description: "Names tailored to your preferences and cultural background"
+        },
+        {
+            icon: <Gift className="w-8 h-8 text-blue-500" />,
+            title: "Meaning & Significance",
+            description: "Detailed explanation of name meanings and their significance"
+        }
+    ];
+
+    const formFields = [
+        { icon: <User />, label: "Father's Name", name: "fatherName", type: "text", placeholder: "Enter father's name" },
+        { icon: <User />, label: "Mother's Name", name: "motherName", type: "text", placeholder: "Enter mother's name" },
+        { icon: <Mail />, label: "Email", name: "email", type: "email", placeholder: "Enter your email" },
+        { icon: <Phone />, label: "WhatsApp Number", name: "whatsappNumber", type: "text", placeholder: "Enter WhatsApp number" },
+        { icon: <Baby />, label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Other"] },
+        { icon: <Clock />, label: "Baby Birth Date", name: "babyBirthDate", type: "date" },
+        { icon: <Clock />, label: "Baby Birth Time", name: "babyBirthTime", type: "time" },
+        { icon: <MapPin />, label: "Birthplace", name: "birthplace", type: "text", placeholder: "Enter birthplace" },
+        { icon: <FileText />, label: "Preferred Starting Letter", name: "preferredStartingLetter", type: "text", placeholder: "Enter preferred letter" },
+        { icon: <Star />, label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Enter preferred deity" },
+        { icon: <Users />, label: "Reference Name", name: "referenceName", type: "text", placeholder: "Enter reference name" },
+        { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter additional preferences" }
+    ];
+
     return (
-        <div className="md:flex md:flex-row min-h-screen ">
-            <div className="flex flex-col justify-center items-center pt-10 md:w-1/2 md:p-20">
-                <h2 className="text-4xl font-bold mb-6">CRM-vedic</h2>
-                <form
+        <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+            {/* Hero Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-center py-16 px-4"
+            >
+                <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-4">
+                    Find the Perfect Name for Your Little One
+                </h1>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Discover meaningful names rooted in Vedic tradition, perfectly suited to your baby's unique birth circumstances and your family's preferences.
+                </p>
+            </motion.div>
+
+            {/* Features Section */}
+            <div className="max-w-6xl mx-auto px-4 mb-16">
+                <div className="grid md:grid-cols-3 gap-8">
+                    {features.map((feature, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.2 }}
+                            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+                        >
+                            <div className="mb-4">{feature.icon}</div>
+                            <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                            <p className="text-gray-600">{feature.description}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Form Section */}
+            <div className="max-w-4xl mx-auto px-4 pb-16">
+                <motion.form
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8 }}
                     onSubmit={handleSubmit}
-                    className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full"
+                    className="bg-white rounded-2xl shadow-xl p-8"
                 >
-                    {[
-                        { label: "Father's Name", name: "fatherName", type: "text", placeholder: "Father Name" },
-                        { label: "Mother's Name", name: "motherName", type: "text", placeholder: "Mother Name" },
-                        { label: "Email", name: "email", type: "email", placeholder: "Email" },
-                        { label: "WhatsApp Number", name: "whatsappNumber", type: "text", placeholder: "WhatsApp Number" },
-                        { label: "Baby Gender", name: "babyGender", type: "select", placeholder: "Select Baby Gender", options: ["Male", "Female", "Other"] },
-                        { label: "Baby Birth Date", name: "babyBirthDate", type: "date" },
-                        { label: "Baby Birth Time", name: "babyBirthTime", type: "time" },
-                        { label: "Birthplace", name: "birthplace", type: "text", placeholder: "Birthplace" },
-                        { label: "Preferred Starting Letter", name: "preferredStartingLetter", type: "text", placeholder: "Preferred Starting Letter" },
-                        { label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Preferred God" },
-                        { label: "Reference Name", name: "referenceName", type: "text", placeholder: "Reference Name" },
-                        { label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Additional Preferences" },
-                    ].map((input, index) => (
-                        <div className="relative mb-6" key={index}>
-                            {input.type === "select" ? (
-                                <>
-                                    <p className="text-sm mb-2 ml-1 peer-focus:hidden">{input.placeholder}</p>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {formFields.map((field, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className="relative"
+                            >
+                                <div className="flex items-center space-x-2 mb-2">
+                                    {field.icon}
+                                    <label className="text-sm font-medium text-gray-700">
+                                        {field.label}
+                                    </label>
+                                </div>
+                                {field.type === "select" ? (
                                     <select
-                                        name={input.name}
-                                        value={formData[input.name]}
+                                        name={field.name}
+                                        value={formData[field.name]}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                                     >
-                                        {/* Placeholder option with an empty value */}
-                                        <option value="" disabled>
-                                            {input.placeholder} {/* Shows the placeholder "Select Baby Gender" */}
-                                        </option>
-                                        {input.options.map((option, i) => (
-                                            <option key={i} value={option}>
-                                                {option}
-                                            </option>
+                                        <option value="">Select Gender</option>
+                                        {field.options.map((option) => (
+                                            <option key={option} value={option}>{option}</option>
                                         ))}
                                     </select>
-                                    <label className="bg-white px-2 absolute left-2 top-2 text-sm text-gray-600 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-[-14px] peer-focus:text-blue-400 peer-focus:text-sm transition-all duration-300 ease-in-out transform -translate-y-2 scale-75 opacity-0 peer-focus:opacity-100 peer-focus:translate-y-0">
-                                        {input.label}
-                                    </label>
-
-                                </>
-                            ) : (
-                                <>
-                                    <div className="relative mb-6" key={index}>
-                                        <p className="text-sm mb-2 ml-1 peer-focus:hidden">{input.label}</p>
-                                        <input
-                                            type={input.type}
-                                            name={input.name}
-                                            value={formData[input.name]}
-                                            onChange={handleChange}
-                                            placeholder={input.placeholder || input.label}
-                                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 peer"
-                                        />
-                                    </div>
-
-                                </>
-                            )}
-                        </div>
-                    ))}
-                    <button
+                                ) : (
+                                    <input
+                                        type={field.type}
+                                        name={field.name}
+                                        value={formData[field.name]}
+                                        onChange={handleChange}
+                                        placeholder={field.placeholder}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                                    />
+                                )}
+                            </motion.div>
+                        ))}
+                    </div>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                        className="w-full mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all"
                     >
-                        Submit
-                    </button>
-                </form>
+                        Submit Application
+                    </motion.button>
+                </motion.form>
             </div>
-            {/* Image Container */}
-            <div className="hidden w-1/2 md:flex justify-end">
-                <img
-                    src='../../../images.jpeg'
-                    alt="CRM Illustration"
-                    className="w-full h-full object-cover"
-                />
-            </div>
+
+            {/* Footer */}
+            <footer className="bg-gray-50 py-12">
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">About Us</h3>
+                            <p className="text-gray-600">We specialize in providing meaningful Vedic names for your little ones, ensuring each name carries profound significance and positive energy.</p>
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">Contact</h3>
+                            <p className="text-gray-600">Email: support@vedicnames.com</p>
+                            <p className="text-gray-600">Phone: +1 (555) 123-4567</p>
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+                            <div className="flex justify-center md:justify-start space-x-4">
+                                <a href="#" className="text-gray-600 hover:text-purple-600">Facebook</a>
+                                <a href="#" className="text-gray-600 hover:text-purple-600">Instagram</a>
+                                <a href="#" className="text-gray-600 hover:text-purple-600">Twitter</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-8 pt-8 border-t border-gray-200 text-center text-gray-600">
+                        <p>&copy; 2024 Vedic Name Services. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 };
