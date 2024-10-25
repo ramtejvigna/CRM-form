@@ -85,7 +85,7 @@ const CustomerForm = () => {
         { icon: <Star />, label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Enter preferred deity" },
         { icon: <Users />, label: "Reference Name", name: "referenceName", type: "text", placeholder: "Enter reference name" },
         { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter additional preferences" },
-        { icon: <Share2 className="w-5 h-5 text-purple-600" />, label: "Lead Source", name: "leadSource", type: "select", options: ['Instagram', 'Facebook', 'Our Website', 'Other'] }
+        { icon: <Share2 className="w-5 h-5 text-purple-600" />, label: "Could you let us know where you first heard about us?", name: "leadSource", type: "select", options: ['Instagram', 'Facebook', 'Our Website', 'Other'] }
     ];
 
     return (
@@ -159,7 +159,8 @@ const CustomerForm = () => {
                                         onChange={handleChange}
                                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                                     >
-                                        <option value="">Select Gender</option>
+                                        <option value="">
+                                        {field.name === "babyGender" ? "Select Gender" : "Select Platform"}</option>
                                         {field.options.map((option) => (
                                             <option key={option} value={option}>{option}</option>
                                         ))}
