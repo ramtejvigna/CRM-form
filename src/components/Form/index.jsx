@@ -1,33 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText } from 'lucide-react';
+import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText, AtSign, Globe, Share2 } from 'lucide-react';
 
-
-const FloatingImage = ({ children, initialX, initialY, duration, delay }) => {
-    const floatVariants = {
-        animate: {
-            y: [initialY, initialY - 20, initialY],
-            x: [initialX, initialX + 20, initialX],
-            transition: {
-                duration,
-                repeat: Infinity,
-                ease: "linear",
-                delay,
-            }
-        }
-    };
-
-    return (
-        <motion.div
-            className="absolute"
-            initial={{ x: initialX, y: initialY }}
-            animate="animate"
-            variants={floatVariants}
-        >
-            {children}
-        </motion.div>
-    );
-};
 
 const CustomerForm = () => {
     const [formData, setFormData] = useState({
@@ -43,12 +17,19 @@ const CustomerForm = () => {
         preferredGod: "",
         referenceName: "",
         additionalPreferences: "",
+        leadSource: '',
+        socialMediaId: '',
+        otherSource: ''
     });
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
+            ...(e.target.name === 'leadSource' && {
+                socialMediaId: '',
+                otherSource: ''
+            })
         });
     };
 
@@ -72,64 +53,22 @@ const CustomerForm = () => {
 
     const features = [
         {
+            image: "baby3.jpg",
             icon: <Star className="w-8 h-8 text-purple-500" />,
             title: "Vedic Name Selection",
             description: "Carefully chosen names based on ancient Vedic principles"
         },
         {
+            image: "baby2.jpeg",
             icon: <Heart className="w-8 h-8 text-red-500" />,
             title: "Personalized Service",
             description: "Names tailored to your preferences and cultural background"
         },
         {
+            image: "pexels-samrana3003-1442005.jpg",
             icon: <Gift className="w-8 h-8 text-blue-500" />,
             title: "Meaning & Significance",
             description: "Detailed explanation of name meanings and their significance"
-        }
-    ];
-
-    const floatingIcons = [
-        {
-            icon: <Baby size={24} className="text-pink-400" />,
-            x: "10%",
-            y: "20%",
-            duration: 4,
-            delay: 0
-        },
-        {
-            icon: <Heart size={20} className="text-red-400" />,
-            x: "85%",
-            y: "30%",
-            duration: 5,
-            delay: 0.5
-        },
-        {
-            icon: <Star size={16} className="text-yellow-400" />,
-            x: "75%",
-            y: "60%",
-            duration: 6,
-            delay: 1
-        },
-        {
-            icon: <Baby size={16} className="text-blue-400" />,
-            x: "15%",
-            y: "70%",
-            duration: 5,
-            delay: 1.5
-        },
-        {
-            icon: <Heart size={14} className="text-purple-400" />,
-            x: "90%",
-            y: "80%",
-            duration: 4,
-            delay: 2
-        },
-        {
-            icon: <Star size={18} className="text-indigo-400" />,
-            x: "5%",
-            y: "40%",
-            duration: 6,
-            delay: 2.5
         }
     ];
 
@@ -145,24 +84,12 @@ const CustomerForm = () => {
         { icon: <FileText />, label: "Preferred Starting Letter", name: "preferredStartingLetter", type: "text", placeholder: "Enter preferred letter" },
         { icon: <Star />, label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Enter preferred deity" },
         { icon: <Users />, label: "Reference Name", name: "referenceName", type: "text", placeholder: "Enter reference name" },
-        { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter additional preferences" }
+        { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter additional preferences" },
+        { icon: <Share2 className="w-5 h-5 text-purple-600" />, label: "Lead Source", name: "leadSource", type: "select", options: ['Instagram', 'Facebook', 'Our Website', 'Other'] }
     ];
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                {floatingIcons.map((item, index) => (
-                    <FloatingImage
-                        key={index}
-                        initialX={item.x}
-                        initialY={item.y}
-                        duration={item.duration}
-                        delay={item.delay}
-                    >
-                        {item.icon}
-                    </FloatingImage>
-                ))}
-            </div>
             {/* Hero Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -172,6 +99,9 @@ const CustomerForm = () => {
             >
                 <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-4">
                     Find the Perfect Name for Your Little One
+                </h1>
+                <h1 className="text-xl md:text-2xl font-semibold text-slate-800 mb-4">
+                    at SelectBabyNames.in
                 </h1>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                     Discover meaningful names rooted in Vedic tradition, perfectly suited to your baby's unique birth circumstances and your family's preferences.
@@ -189,7 +119,8 @@ const CustomerForm = () => {
                             transition={{ duration: 0.5, delay: index * 0.2 }}
                             className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
                         >
-                            <div className="mb-4">{feature.icon}</div>
+                            <img src={feature.image} alt={feature.image} className='h-48 w-full rounded-md' />
+                            <div className="my-4">{feature.icon}</div>
                             <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                             <p className="text-gray-600">{feature.description}</p>
                         </motion.div>
@@ -245,7 +176,56 @@ const CustomerForm = () => {
                                 )}
                             </motion.div>
                         ))}
+
+                        {(formData.leadSource === 'Instagram' || formData.leadSource === 'Facebook') && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="relative"
+                            >
+                                <div className="flex items-center space-x-2 mb-2">
+                                    <AtSign className="w-5 h-5 text-purple-600" />
+                                    <label className="text-sm font-medium text-gray-700">
+                                        {formData.leadSource} ID
+                                    </label>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="socialMediaId"
+                                    value={formData.socialMediaId}
+                                    onChange={handleChange}
+                                    placeholder={`Enter your ${formData.leadSource} ID`}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                                />
+                            </motion.div>
+                        )}
+
+                        {formData.leadSource === 'Other' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="relative"
+                            >
+                                <div className="flex items-center space-x-2 mb-2">
+                                    <Globe className="w-5 h-5 text-purple-600" />
+                                    <label className="text-sm font-medium text-gray-700">
+                                        Please specify the source
+                                    </label>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="otherSource"
+                                    value={formData.otherSource}
+                                    onChange={handleChange}
+                                    placeholder="Please specify where you heard about us"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                                />
+                            </motion.div>
+                        )}
                     </div>
+
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
