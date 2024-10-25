@@ -2,6 +2,33 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText } from 'lucide-react';
 
+
+const FloatingImage = ({ children, initialX, initialY, duration, delay }) => {
+    const floatVariants = {
+        animate: {
+            y: [initialY, initialY - 20, initialY],
+            x: [initialX, initialX + 20, initialX],
+            transition: {
+                duration,
+                repeat: Infinity,
+                ease: "linear",
+                delay,
+            }
+        }
+    };
+
+    return (
+        <motion.div
+            className="absolute"
+            initial={{ x: initialX, y: initialY }}
+            animate="animate"
+            variants={floatVariants}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
 const CustomerForm = () => {
     const [formData, setFormData] = useState({
         fatherName: "",
@@ -61,6 +88,51 @@ const CustomerForm = () => {
         }
     ];
 
+    const floatingIcons = [
+        {
+            icon: <Baby size={24} className="text-pink-400" />,
+            x: "10%",
+            y: "20%",
+            duration: 4,
+            delay: 0
+        },
+        {
+            icon: <Heart size={20} className="text-red-400" />,
+            x: "85%",
+            y: "30%",
+            duration: 5,
+            delay: 0.5
+        },
+        {
+            icon: <Star size={16} className="text-yellow-400" />,
+            x: "75%",
+            y: "60%",
+            duration: 6,
+            delay: 1
+        },
+        {
+            icon: <Baby size={16} className="text-blue-400" />,
+            x: "15%",
+            y: "70%",
+            duration: 5,
+            delay: 1.5
+        },
+        {
+            icon: <Heart size={14} className="text-purple-400" />,
+            x: "90%",
+            y: "80%",
+            duration: 4,
+            delay: 2
+        },
+        {
+            icon: <Star size={18} className="text-indigo-400" />,
+            x: "5%",
+            y: "40%",
+            duration: 6,
+            delay: 2.5
+        }
+    ];
+
     const formFields = [
         { icon: <User />, label: "Father's Name", name: "fatherName", type: "text", placeholder: "Enter father's name" },
         { icon: <User />, label: "Mother's Name", name: "motherName", type: "text", placeholder: "Enter mother's name" },
@@ -78,6 +150,19 @@ const CustomerForm = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                {floatingIcons.map((item, index) => (
+                    <FloatingImage
+                        key={index}
+                        initialX={item.x}
+                        initialY={item.y}
+                        duration={item.duration}
+                        delay={item.delay}
+                    >
+                        {item.icon}
+                    </FloatingImage>
+                ))}
+            </div>
             {/* Hero Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
