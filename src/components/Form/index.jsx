@@ -1,7 +1,30 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText, AtSign, Globe, Share2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText, AtSign, Globe, Share2, CheckCircle2, XCircle, Send } from 'lucide-react';
 
+
+const CustomNotification = ({ status, message }) => (
+    <motion.div
+        className={`flex items-center w-full h-full gap-4 p-4 rounded-lg shadow-lg ${status ? 'bg-gradient-to-r from-green-50 to-green-100' : 'bg-gradient-to-r from-red-50 to-red-100'
+            } bg-opacity-80`}
+    >
+        <div className={`p-2 rounded-full ${status ? 'bg-green-200' : 'bg-red-200'}`}>
+            {status ? (
+                <CheckCircle2 className="w-6 h-6 text-green-600" />
+            ) : (
+                <XCircle className="w-6 h-6 text-red-600" />
+            )}
+        </div>
+        <div>
+            <h3 className={`font-semibold ${status ? 'text-green-800' : 'text-red-800'}`}>
+                {status ? 'Success!' : 'Error'}
+            </h3>
+            <p className={`text-sm ${status ? 'text-green-600' : 'text-red-600'}`}>
+                {message}
+            </p>
+        </div>
+    </motion.div>
+);
 
 const CustomerForm = () => {
     const [formData, setFormData] = useState({
@@ -22,6 +45,10 @@ const CustomerForm = () => {
         otherSource: ''
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState({ success: false, message: '' });
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -35,6 +62,15 @@ const CustomerForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+
+        // Paper plane animation - moves up and to the right
+        const paperPlane = document.getElementById('paper-plane');
+        if (paperPlane) {
+            paperPlane.style.transform = 'translate(50vw, -50vh) rotate(45deg)';
+            paperPlane.style.opacity = '0';
+        }
+
         try {
             const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
                 method: 'POST',
@@ -43,11 +79,54 @@ const CustomerForm = () => {
                 },
                 body: JSON.stringify(formData),
             });
+
+            // Wait for 3 seconds to show the animation
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
             if (response.ok) {
-                alert('Successfully submitted!');
+                setSubmitStatus({
+                    success: true,
+                    message: 'Application submitted successfully! We will get back to you soon.'
+                });
+            } else {
+                throw new Error('Submission failed');
             }
         } catch (error) {
-            console.error("Error adding customer:", error);
+            setSubmitStatus({
+                success: false,
+                message: 'Oops! Something went wrong. Please try again.'
+            });
+        } finally {
+            setIsSubmitting(false);
+            setShowNotification(true);
+            // Reset paper plane position
+            const paperPlane = document.getElementById('paper-plane');
+            if (paperPlane) {
+                setTimeout(() => {
+                    paperPlane.style.transform = 'translate(0, 0) rotate(0deg)';
+                    paperPlane.style.opacity = '1';
+                }, 500);
+            }
+            // Hide notification after 5 seconds
+            setTimeout(() => setShowNotification(false), 5000);
+
+            setFormData({
+                fatherName: "",
+                motherName: "",
+                email: "",
+                whatsappNumber: "",
+                babyGender: "",
+                babyBirthDate: "",
+                babyBirthTime: "",
+                birthplace: "",
+                preferredStartingLetter: "",
+                preferredGod: "",
+                referenceName: "",
+                additionalPreferences: "",
+                leadSource: '',
+                socialMediaId: '',
+                otherSource: ''
+            });
         }
     };
 
@@ -90,6 +169,83 @@ const CustomerForm = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+            <AnimatePresence>
+                {isSubmitting && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="h-screen fixed inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-2xl"
+                    >
+                        <motion.div
+                            id="paper-plane"
+                            className="transition-all duration-1000 ease-in-out"
+                        >
+                            <Send className="w-16 h-16 text-purple-600" />
+                        </motion.div>
+                        <motion.div
+                            className="from-purple-100/50 to-transparent"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                        />
+                        <motion.div
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="mt-10 transform -translate-x-1/2"
+                        >
+                            <div className="flex flex-col items-center">
+                                <div className="loading-dots flex space-x-2">
+                                    <motion.div
+                                        animate={{
+                                            y: ["0%", "-50%", "0%"],
+                                        }}
+                                        transition={{
+                                            duration: 0.6,
+                                            repeat: Infinity,
+                                            ease: "easeInOut",
+                                        }}
+                                        className="w-3 h-3 bg-purple-600 rounded-full"
+                                    />
+                                    <motion.div
+                                        animate={{
+                                            y: ["0%", "-50%", "0%"],
+                                        }}
+                                        transition={{
+                                            duration: 0.6,
+                                            repeat: Infinity,
+                                            ease: "easeInOut",
+                                            delay: 0.2,
+                                        }}
+                                        className="w-3 h-3 bg-purple-600 rounded-full"
+                                    />
+                                    <motion.div
+                                        animate={{
+                                            y: ["0%", "-50%", "0%"],
+                                        }}
+                                        transition={{
+                                            duration: 0.6,
+                                            repeat: Infinity,
+                                            ease: "easeInOut",
+                                            delay: 0.4,
+                                        }}
+                                        className="w-3 h-3 bg-purple-600 rounded-full"
+                                    />
+                                </div>
+                                <motion.p
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.5 }}
+                                    className="mt-4 text-2xl font-medium text-purple-600"
+                                >
+                                    Sending your application...
+                                </motion.p>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             {/* Hero Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -128,6 +284,22 @@ const CustomerForm = () => {
                 </div>
             </div>
 
+            <AnimatePresence>
+                {showNotification && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 20 }}
+                        exit={{ opacity: 0, y: -50 }}
+                        className="fixed top-1/3 left-1/3 text-xl transform -translate-x-1/2 z-50 w-full max-w-lg px-4"
+                    >
+                        <CustomNotification
+                            status={submitStatus.success}
+                            message={submitStatus.message}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Form Section */}
             <div className="max-w-4xl mx-auto px-4 pb-16">
                 <motion.form
@@ -160,7 +332,7 @@ const CustomerForm = () => {
                                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                                     >
                                         <option value="">
-                                        {field.name === "babyGender" ? "Select Gender" : "Select Platform"}</option>
+                                            {field.name === "babyGender" ? "Select Gender" : "Select Platform"}</option>
                                         {field.options.map((option) => (
                                             <option key={option} value={option}>{option}</option>
                                         ))}
@@ -231,9 +403,11 @@ const CustomerForm = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         type="submit"
-                        className="w-full mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all"
+                        disabled={isSubmitting}
+                        className={`w-full mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-medium transition-all ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-700 hover:to-indigo-700'
+                            }`}
                     >
-                        Submit Application
+                        {isSubmitting ? 'Submitting...' : 'Submit Application'}
                     </motion.button>
                 </motion.form>
             </div>
