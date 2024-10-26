@@ -175,7 +175,7 @@ const CustomerForm = () => {
         { icon: <MapPin />, label: "Birthplace", name: "birthplace", type: "text", placeholder: "Enter birthplace" },
         { icon: <FileText />, label: "Preferred Starting Letter", name: "preferredStartingLetter", type: "text", placeholder: "Enter preferred letter" },
         { icon: <Star />, label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Enter preferred deity" },
-        { icon: <Users />, label: "Reference Name", name: "referenceName", type: "text", placeholder: "Enter reference name" },
+        { icon: <Users />, label: "Reference Name (if any)", name: "referenceName", type: "text", placeholder: "Enter reference name" },
         { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter additional preferences" },
         { icon: <Share2 className="w-5 h-5 text-purple-600" />, label: "Could you let us know where you first heard about us?", name: "leadSource", type: "select", options: ['Instagram', 'Facebook', 'Our Website', 'Other'] }
     ];
