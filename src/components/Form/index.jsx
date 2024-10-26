@@ -50,14 +50,27 @@ const CustomerForm = () => {
     const [submitStatus, setSubmitStatus] = useState({ success: false, message: '' });
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-            ...(e.target.name === 'leadSource' && {
-                socialMediaId: '',
-                otherSource: ''
-            })
-        });
+        const { name, value } = e.target;
+        
+        if (name === 'whatsappNumber') {
+            // Only allow numbers and limit to 10 digits
+            const numbersOnly = value.replace(/[^0-9]/g, '');
+            const limitedToTen = numbersOnly.slice(0, 10);
+            
+            setFormData(prev => ({
+                ...prev,
+                [name]: limitedToTen
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: value,
+                ...(name === 'leadSource' && {
+                    socialMediaId: '',
+                    otherSource: ''
+                })
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -344,7 +357,10 @@ const CustomerForm = () => {
                                         value={formData[field.name]}
                                         onChange={handleChange}
                                         placeholder={field.placeholder}
-                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                                        maxLength={field.name === 'whatsappNumber' ? 10 : undefined}
+                                        pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
+                                        inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
+                                        className={`w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all}`}
                                     />
                                 )}
                             </motion.div>
