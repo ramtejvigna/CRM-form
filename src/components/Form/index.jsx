@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, Gift, FileText, AtSign, Globe, Share2, CheckCircle2, XCircle, Send } from 'lucide-react';
 
-
 const CustomNotification = ({ status, message }) => (
     <motion.div
         className={`flex items-center w-full h-full gap-4 p-4 rounded-lg shadow-lg ${status ? 'bg-gradient-to-r from-green-50 to-green-100' : 'bg-gradient-to-r from-red-50 to-red-100'
@@ -36,6 +35,7 @@ const CustomerForm = () => {
         babyBirthDate: "",
         babyBirthTime: "",
         birthplace: "",
+        preferredStartingLetterType: "",
         preferredStartingLetter: "",
         preferredGod: "",
         referenceName: "",
@@ -51,12 +51,12 @@ const CustomerForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        
+
         if (name === 'whatsappNumber') {
             // Only allow numbers and limit to 10 digits
             const numbersOnly = value.replace(/[^0-9]/g, '');
             const limitedToTen = numbersOnly.slice(0, 10);
-            
+
             setFormData(prev => ({
                 ...prev,
                 [name]: limitedToTen
@@ -85,6 +85,8 @@ const CustomerForm = () => {
         }
 
         try {
+            // const response = await fetch("http://localhost:3000/customers/addCustomerWithAssignment", {
+
             const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
                 method: 'POST',
                 headers: {
@@ -132,6 +134,7 @@ const CustomerForm = () => {
                 babyBirthDate: "",
                 babyBirthTime: "",
                 birthplace: "",
+                preferredStartingLetterType: "",
                 preferredStartingLetter: "",
                 preferredGod: "",
                 referenceName: "",
@@ -173,7 +176,7 @@ const CustomerForm = () => {
         { icon: <Clock />, label: "Baby Birth Date", name: "babyBirthDate", type: "date" },
         { icon: <Clock />, label: "Baby Birth Time", name: "babyBirthTime", type: "time" },
         { icon: <MapPin />, label: "Birthplace", name: "birthplace", type: "text", placeholder: "Enter birthplace" },
-        { icon: <FileText />, label: "Preferred Starting Letter", name: "preferredStartingLetter", type: "text", placeholder: "Enter preferred letter" },
+        { icon: <FileText />, label: "Preferred Starting Letter Type", name: "preferredStartingLetterType", type: "select", options: ["Alphabet-based", "Nakshatra-based", "Rashi-based"] },
         { icon: <Star />, label: "Preferred God", name: "preferredGod", type: "text", placeholder: "Enter preferred deity" },
         { icon: <Users />, label: "Reference Name (if any)", name: "referenceName", type: "text", placeholder: "Enter reference name" },
         { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter additional preferences" },
@@ -345,7 +348,8 @@ const CustomerForm = () => {
                                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                                     >
                                         <option value="">
-                                            {field.name === "babyGender" ? "Select Gender" : "Select Platform"}</option>
+                                            {field.name === "babyGender" ? "Select Gender" : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type" : "Select Platform"}
+                                        </option>
                                         {field.options.map((option) => (
                                             <option key={option} value={option}>{option}</option>
                                         ))}
@@ -362,6 +366,30 @@ const CustomerForm = () => {
                                         inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
                                         className={`w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all}`}
                                     />
+                                )}
+
+                                {field.name === "preferredStartingLetterType" && formData.preferredStartingLetterType && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="relative mt-4"
+                                    >
+                                        <div className="flex items-center space-x-2 mb-2">
+                                            <FileText className="w-5 h-5 text-purple-600" />
+                                            <label className="text-sm font-medium text-gray-700">
+                                                Preferred Starting Letter
+                                            </label>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="preferredStartingLetter"
+                                            value={formData.preferredStartingLetter}
+                                            onChange={handleChange}
+                                            placeholder={`Enter preferred ${formData.preferredStartingLetterType} starting letter`}
+                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                                        />
+                                    </motion.div>
                                 )}
                             </motion.div>
                         ))}
