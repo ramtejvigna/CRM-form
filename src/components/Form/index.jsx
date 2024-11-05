@@ -172,7 +172,7 @@ const CustomerForm = () => {
         { icon: <User />, label: "Mother's Name", name: "motherName", type: "text", placeholder: "Enter mother's name" },
         { icon: <Mail />, label: "Email", name: "email", type: "email", placeholder: "Enter your email" },
         { icon: <Phone />, label: "WhatsApp Number", name: "whatsappNumber", type: "text", placeholder: "Enter WhatsApp number" },
-        { icon: <Baby />, label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Other"] },
+        { icon: <Baby />, label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Unisex"] },
         { icon: <Clock />, label: "Baby Birth Date", name: "babyBirthDate", type: "date" },
         { icon: <Clock />, label: "Baby Birth Time", name: "babyBirthTime", type: "time" },
         { icon: <MapPin />, label: "Birthplace", name: "birthplace", type: "text", placeholder: "Enter birthplace" },
