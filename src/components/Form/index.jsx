@@ -205,7 +205,7 @@ const CustomerForm = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:3000/customers/addCustomerWithAssignment", {
+            const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
                 // const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
                 method: 'POST',
                 headers: {
