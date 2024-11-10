@@ -32,8 +32,8 @@ const CustomNotification = ({ status, message }) => (
 const CustomerForm = () => {
   const [formData, setFormData] = useState({
     customerName: '',
-    customerEmail: '',
-    customerWhatsapp: '',
+    email: '',
+    whatsappNumber: '',
     fatherName: '',
     motherName: '',
     babyGender: '',
@@ -52,8 +52,8 @@ const CustomerForm = () => {
 
   const [errors, setErrors] = useState({
     customerName: false,
-    customerEmail: false,
-    customerWhatsapp: false,
+    email: false,
+    whatsappNumber: false,
     fatherName: false,
     motherName: false,
     babyGender: false,
@@ -72,7 +72,7 @@ const CustomerForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'customerWhatsapp') {
+    if (name === 'whatsappNumber') {
       // Only allow numbers and limit to 10 digits
       const numbersOnly = value.replace(/[^0-9]/g, '');
       const limitedToTen = numbersOnly.slice(0, 10);
@@ -103,18 +103,18 @@ const CustomerForm = () => {
       setErrors(prev => ({ ...prev, customerName: false }));
     }
 
-    if (formData.customerEmail.trim() === '' || !isValidEmail(formData.customerEmail)) {
-      setErrors(prev => ({ ...prev, customerEmail: true }));
+    if (formData.email.trim() === '' || !isValidEmail(formData.email)) {
+      setErrors(prev => ({ ...prev, email: true }));
       isValid = false;
     } else {
-      setErrors(prev => ({ ...prev, customerEmail: false }));
+      setErrors(prev => ({ ...prev, email: false }));
     }
 
-    if (formData.customerWhatsapp.trim() === '' || formData.customerWhatsapp.length < 10) {
-      setErrors(prev => ({ ...prev, customerWhatsapp: true }));
+    if (formData.whatsappNumber.trim() === '' || formData.whatsappNumber.length < 10) {
+      setErrors(prev => ({ ...prev, whatsappNumber: true }));
       isValid = false;
     } else {
-      setErrors(prev => ({ ...prev, customerWhatsapp: false }));
+      setErrors(prev => ({ ...prev, whatsappNumber: false }));
     }
 
     if (formData.fatherName.trim() === '') {
@@ -205,8 +205,8 @@ const CustomerForm = () => {
     }
 
     try {
-      // const response = await fetch("http://localhost:3000/customers/addCustomerWithAssignment", {
-      const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
+      const response = await fetch("http://localhost:3000/customers/addCustomerWithAssignment", {
+      // const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -246,8 +246,8 @@ const CustomerForm = () => {
 
       setFormData({
         customerName: '',
-        customerEmail: '',
-        customerWhatsapp: '',
+        email: '',
+        whatsappNumber: '',
         fatherName: '',
         motherName: '',
         babyGender: '',
@@ -290,8 +290,8 @@ const CustomerForm = () => {
 
   const formFields = [
     { icon: <User />, label: "Customer Name", name: "customerName", type: "text", placeholder: "Enter Customer Name", required: true },
-    { icon: <Mail />, label: "Customer Email", name: "customerEmail", type: "email", placeholder: "Enter Customer Email", required: true },
-    { icon: <Phone />, label: "Customer WhatsApp", name: "customerWhatsapp", type: "text", placeholder: "Enter Customer WhatsApp Number", required: true },
+    { icon: <Mail />, label: "Customer Email", name: "email", type: "email", placeholder: "Enter Customer Email", required: true },
+    { icon: <Phone />, label: "Customer WhatsApp", name: "whatsappNumber", type: "text", placeholder: "Enter Customer WhatsApp Number", required: true },
     { icon: <User />, label: "Baby's Father Name", name: "fatherName", type: "text", placeholder: "Enter Baby's Father Name", required: true },
     { icon: <User />, label: "Baby's Mother Name", name: "motherName", type: "text", placeholder: "Enter Mother's Name", required: true },
     { icon: <Baby />, label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Unisex"], required: true },
@@ -462,9 +462,9 @@ const CustomerForm = () => {
         >
           <div className="flex items-center space-x-2 mb-2">
             {field.icon}
-            <label className={`text-sm font-medium ${field.name === 'customerName' || field.name === 'customerEmail' || field.name === 'customerWhatsapp' || field.name === 'fatherName' || field.name === 'motherName' || field.name === 'babyGender' || field.name === 'babyBirthDate' || field.name === 'babyBirthTime' || field.name === 'birthplace' || field.name === 'preferredStartingLetterType' || field.name === 'preferredGod' ? 'text-slate-800' : 'text-gray-700'}`}>
+            <label className={`text-sm font-medium ${field.name === 'customerName' || field.name === 'email' || field.name === 'whatsappNumber' || field.name === 'fatherName' || field.name === 'motherName' || field.name === 'babyGender' || field.name === 'babyBirthDate' || field.name === 'babyBirthTime' || field.name === 'birthplace' || field.name === 'preferredStartingLetterType' || field.name === 'preferredGod' ? 'text-slate-800' : 'text-gray-700'}`}>
               {field.label}
-              {(field.name === 'customerName' || field.name === 'customerEmail' || field.name === 'customerWhatsapp' || field.name === 'fatherName' || field.name === 'motherName' || field.name === 'babyGender' || field.name === 'babyBirthDate' || field.name === 'babyBirthTime' || field.name === 'birthplace' || field.name === 'preferredStartingLetterType' || field.name === 'preferredGod') && <span className="text-red-600 ml-1">*</span>}
+              {(field.name === 'customerName' || field.name === 'email' || field.name === 'whatsappNumber' || field.name === 'fatherName' || field.name === 'motherName' || field.name === 'babyGender' || field.name === 'babyBirthDate' || field.name === 'babyBirthTime' || field.name === 'birthplace' || field.name === 'preferredStartingLetterType' || field.name === 'preferredGod') && <span className="text-red-600 ml-1">*</span>}
             </label>
           </div>
           {field.type === "select" ? (
@@ -488,9 +488,9 @@ const CustomerForm = () => {
               value={formData[field.name]}
               onChange={handleChange}
               placeholder={field.placeholder}
-              maxLength={field.name === 'customerWhatsapp' ? 10 : undefined}
-              pattern={field.name === 'customerWhatsapp' ? '[0-9]*' : undefined}
-              inputMode={field.name === 'customerWhatsapp' ? 'numeric' : undefined}
+              maxLength={field.name === 'whatsappNumber' ? 10 : undefined}
+              pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
+              inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
               className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
             />
           )}
@@ -503,8 +503,8 @@ const CustomerForm = () => {
               className="text-red-600 text-sm mt-2"
             >
               {field.name === 'customerName' ? 'Customer name is required' :
-                field.name === 'customerEmail' ? 'Valid customer email is required' :
-                  field.name === 'customerWhatsapp' ? 'Valid customer WhatsApp number is required' :
+                field.name === 'email' ? 'Valid customer email is required' :
+                  field.name === 'whatsappNumber' ? 'Valid customer WhatsApp number is required' :
                     field.name === 'fatherName' ? 'Father\'s name is required' :
                       field.name === 'motherName' ? 'Mother\'s name is required' :
                         field.name === 'babyGender' ? 'Baby gender is required' :
