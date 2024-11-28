@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, FileText, AtSign, Globe, Share2, CheckCircle2, XCircle, Send, Gift } from 'lucide-react';
+import axios from 'axios';
+import { LocationSuggestions, ApplicationIDModal } from './LocationSuggestions';
 
 const GodOptions = [
-  "Ganesha", "Shiva", "Vishnu", "Krishna", "Rama", "Hanuman", "Durga", "Lakshmi", "Saraswati", "Shiva", "Brahma", "Indra", "Agni", "Varuna", "Vayu", "Yama", "Surya", "Chandra", "Skanda", "Kubera"
+  "Ganesha", "Shiva", "Vishnu", "Krishna", "Rama", "Hanuman", "Durga", "Lakshmi", "Saraswati", "Brahma", "Indra", "Agni", "Varuna", "Vayu", "Yama", "Surya", "Chandra", "Skanda", "Kubera"
 ];
+
+const api = "http://localhost:8000"
+const deployedAPI = "https://vedic-backend-neon.vercel.app"
 
 const CustomNotification = ({ status, message }) => (
   <motion.div
@@ -67,6 +72,10 @@ const CustomerForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ success: false, message: '' });
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [applicationId, setApplicationId] = useState('');
+  const locationInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,6 +105,58 @@ const CustomerForm = () => {
         })
       }));
     }
+  };
+
+  const handleLocationInput = (e) => {
+    const value = e.target.value;
+    setFormData(prev => ({ ...prev, birthplace: value }));
+
+    // Clear previous timeout
+    if (window.locationSuggestionsTimeout) {
+      clearTimeout(window.locationSuggestionsTimeout);
+    }
+
+    // Set new timeout
+    if (value.length > 2) {
+      window.locationSuggestionsTimeout = setTimeout(() => {
+        fetchLocationSuggestions(value);
+      }, 500); // 500ms delay
+    } else {
+      setLocationSuggestions([]);
+    }
+  };
+
+  const GEOAPIFY_API_KEY = 'fbb69e95df744d56a558e579dc900869';
+
+  const fetchLocationSuggestions = async (query) => {
+    try {
+      const response = await fetch(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&filter=countrycode:in&apiKey=${GEOAPIFY_API_KEY}`,
+        { method: 'GET' }
+      );
+
+      const result = await response.json();
+
+      // Transform the response to match our suggestion format
+      const suggestions = result.features.map(location => ({
+        PlaceName: location.properties.formatted,
+        Coordinates: location.geometry.coordinates,
+        Type: location.properties.place_type || 'Location'
+      }));
+
+      setLocationSuggestions(suggestions);
+    } catch (error) {
+      console.error('Location suggestions error', error);
+      setLocationSuggestions([]);
+    }
+  };
+
+  const selectLocationSuggestion = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      birthplace: suggestion.PlaceName
+    }));
+    setLocationSuggestions([]);
   };
 
   const validateForm = () => {
@@ -202,31 +263,28 @@ const CustomerForm = () => {
 
     setIsSubmitting(true);
 
-    // Paper plane animation - moves up and to the right
-    const paperPlane = document.getElementById('paper-plane');
-    if (paperPlane) {
-      paperPlane.style.transform = 'translate(50vw, -50vh) rotate(45deg)';
-      paperPlane.style.opacity = '0';
-    }
-
     try {
-      // const response = await fetch("http://localhost:3000/customers/addCustomerWithAssignment", {
-      const response = await fetch("https://vedic-backend-neon.vercel.app/customers/addCustomerWithAssignment", {
+      const response = await fetch(`${api}/customers/addCustomerWithAssignment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
-      // Wait for 3 seconds to show the animation
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      const data = await response.json()
 
       if (response.ok) {
+        setApplicationId(data.applicationId);
         setSubmitStatus({
           success: true,
-          message: 'Application submitted successfully! We will get back to you soon.'
+          message: `Application submitted successfully!`
         });
+
+        // Show both notification and modal
+        setShowNotification(true);
+        setTimeout(() => {
+          setShowApplicationModal(true);
+        }, 3000);
       } else {
         throw new Error('Submission failed');
       }
@@ -237,15 +295,7 @@ const CustomerForm = () => {
       });
     } finally {
       setIsSubmitting(false);
-      setShowNotification(true);
-      // Reset paper plane position
-      const paperPlane = document.getElementById('paper-plane');
-      if (paperPlane) {
-        setTimeout(() => {
-          paperPlane.style.transform = 'translate(0, 0) rotate(0deg)';
-          paperPlane.style.opacity = '1';
-        }, 500);
-      }
+
       // Hide notification after 5 seconds
       setTimeout(() => setShowNotification(false), 5000);
 
@@ -298,7 +348,7 @@ const CustomerForm = () => {
     { icon: <Phone />, label: "Customer WhatsApp", name: "whatsappNumber", type: "text", placeholder: "Enter Customer WhatsApp Number", required: true },
     { icon: <User />, label: "Baby's Father Name", name: "fatherName", type: "text", placeholder: "Enter Baby's Father Name", required: true },
     { icon: <User />, label: "Baby's Mother Name", name: "motherName", type: "text", placeholder: "Enter Mother's Name", required: true },
-    { icon: <Baby />, label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female", "Unisex"], required: true },
+    { icon: <Baby />, label: "Baby Gender", name: "babyGender", type: "select", options: ["Male", "Female"], required: true },
     { icon: <Clock />, label: "Baby Birth Date", name: "babyBirthDate", type: "date", required: true },
     { icon: <Clock />, label: "Baby Birth Time", name: "babyBirthTime", type: "time", required: true },
     { icon: <MapPin />, label: "Birthplace", name: "birthplace", type: "text", placeholder: "Enter Birthplace", required: true },
@@ -462,39 +512,87 @@ const CustomerForm = () => {
               >
                 <div className="flex items-center space-x-2 mb-2">
                   {field.icon}
-                  <label className={`text-sm font-medium ${field.name === 'customerName' || field.name === 'email' || field.name === 'whatsappNumber' || field.name === 'fatherName' || field.name === 'motherName' || field.name === 'babyGender' || field.name === 'babyBirthDate' || field.name === 'babyBirthTime' || field.name === 'birthplace' || field.name === 'preferredStartingLetterType' || field.name === 'preferredGod' ? 'text-slate-800' : 'text-gray-700'}`}>
+                  <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
                     {field.label}
-                    {(field.name === 'customerName' || field.name === 'email' || field.name === 'whatsappNumber' || field.name === 'fatherName' || field.name === 'motherName' || field.name === 'babyGender' || field.name === 'babyBirthDate' || field.name === 'babyBirthTime' || field.name === 'birthplace' || field.name === 'preferredStartingLetterType' || field.name === 'preferredGod') && <span className="text-red-600 ml-1">*</span>}
+                    {field.required && <span className="text-red-600 ml-1">*</span>}
                   </label>
                 </div>
-                {field.type === "select" ? (
-                  <select
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
-                  >
-                    <option value="">
-                      {field.name === "babyGender" ? "Select Baby Gender" : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type" : field.name === "preferredGod" ? "Select Preferred God" : "Select Platform"}
-                    </option>
-                    {(field.name === "preferredGod" ? GodOptions : field.options).map((option) => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    maxLength={field.name === 'whatsappNumber' ? 10 : undefined}
-                    pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
-                    inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
-                    className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
+                <div className="relative">
+                  {field.type === "select" ? (
+                    <select
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
+                    >
+                      <option value="">
+                        {field.name === "babyGender" ? "Select Baby Gender" : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type" : field.name === "preferredGod" ? "Select Preferred God" : "Select Platform"}
+                      </option>
+                      {(field.name === "preferredGod" ? GodOptions : field.options).map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="relative">
+                      <input
+                        type={field.type}
+                        name={field.name}
+                        ref={field.name === 'birthplace' ? locationInputRef : null}
+                        value={formData[field.name]}
+                        onChange={field.name === 'birthplace' ? handleLocationInput : handleChange}
+                        placeholder={field.placeholder}
+                        maxLength={field.name === 'whatsappNumber' ? 10 : undefined}
+                        pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
+                        inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
+                        className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
+                      />
+                    </div>
+                  )}
+                </div>
+                {field.name === 'birthplace' && locationSuggestions.length > 0 && (
+                  <LocationSuggestions
+                    suggestions={locationSuggestions}
+                    onSelectSuggestion={selectLocationSuggestion}
+                    inputRef={locationInputRef}
                   />
                 )}
 
+                 {field.name === "preferredStartingLetterType" && formData.preferredStartingLetterType === 'Alphabet Based' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="relative mt-4"
+                                    >
+                                        <div className="flex items-center space-x-2 mb-2">
+                                            <FileText className="w-5 h-5 text-purple-600" />
+                                            <label className="text-sm font-medium text-gray-700">
+                                                Preferred Starting Letter
+                                            </label>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="preferredStartingLetter"
+                                            value={formData.preferredStartingLetter}
+                                            onChange={handleChange}
+                                            placeholder="Enter preferred starting letter"
+                                            className={`w-full p-3 border ${errors.preferredStartingLetter ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
+                                        />
+                                        {errors.preferredStartingLetter && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 5 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="text-red-600 text-sm mt-2"
+                                            >
+                                                Preferred starting letter is required
+                                            </motion.div>
+                                        )}
+                                    </motion.div>
+                                )}
+                            
+                      
+                   
                 {errors[field.name] && (
                   <motion.div
                     initial={{ opacity: 0, y: 5 }}
@@ -502,52 +600,7 @@ const CustomerForm = () => {
                     transition={{ duration: 0.3 }}
                     className="text-red-600 text-sm mt-2"
                   >
-                    {field.name === 'customerName' ? 'Customer name is required' :
-                      field.name === 'email' ? 'Valid customer email is required' :
-                        field.name === 'whatsappNumber' ? 'Valid customer WhatsApp number is required' :
-                          field.name === 'fatherName' ? 'Father\'s name is required' :
-                            field.name === 'motherName' ? 'Mother\'s name is required' :
-                              field.name === 'babyGender' ? 'Baby gender is required' :
-                                field.name === 'babyBirthDate' ? 'Baby birth date is required' :
-                                  field.name === 'babyBirthTime' ? 'Baby birth time is required' :
-                                    field.name === 'birthplace' ? 'Birthplace is required' :
-                                      field.name === 'preferredStartingLetterType' ? 'Preferred starting letter type is required' :
-                                        field.name === 'preferredStartingLetter' ? 'Preferred starting letter is required' :
-                                          field.name === 'preferredGod' ? 'Preferred god is required' : ''}
-                  </motion.div>
-                )}
-
-                {field.name === "preferredStartingLetterType" && formData.preferredStartingLetterType === 'Alphabet Based' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="relative mt-4"
-                  >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <FileText className="w-5 h-5 text-purple-600" />
-                      <label className="text-sm font-medium text-gray-700">
-                        Preferred Starting Letter
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      name="preferredStartingLetter"
-                      value={formData.preferredStartingLetter}
-                      onChange={handleChange}
-                      placeholder="Enter preferred starting letter"
-                      className={`w-full p-3 border ${errors.preferredStartingLetter ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
-                    />
-                    {errors.preferredStartingLetter && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-red-600 text-sm mt-2"
-                      >
-                        Preferred starting letter is required
-                      </motion.div>
-                    )}
+                    {`${field.label} is required`}
                   </motion.div>
                 )}
               </motion.div>
@@ -593,6 +646,15 @@ const CustomerForm = () => {
           </div>
         </div>
       </footer>
+      <AnimatePresence>
+        {showApplicationModal && (
+          <ApplicationIDModal
+            applicationId={applicationId}
+            onClose={() => setShowApplicationModal(false)}
+          />
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };
