@@ -8,7 +8,7 @@ const GodOptions = [
   "Ganesha", "Shiva", "Vishnu", "Krishna", "Rama", "Hanuman", "Durga", "Lakshmi", "Saraswati", "Brahma", "Indra", "Agni", "Varuna", "Vayu", "Yama", "Surya", "Chandra", "Skanda", "Kubera"
 ];
 
-const api = "http://localhost:8000"
+const api = "https://vedic-backend-neon.vercel.app"
 const deployedAPI = "https://vedic-backend-neon.vercel.app"
 
 const CustomNotification = ({ status, message }) => (
