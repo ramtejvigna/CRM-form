@@ -371,7 +371,7 @@ const CustomerForm = () => {
 
   const fetchImages = async () => {
     try {
-      const response = await fetch('http://localhost:9000/images');
+      const response = await fetch(`${deployedAPI}/images`);
       if (!response.ok) throw new Error('Failed to fetch images');
       const data = await response.json();
       setFeatures(data);
