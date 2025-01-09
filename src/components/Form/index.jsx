@@ -376,7 +376,7 @@ const CustomerForm = () => {
       const data = await response.json();
       setFeatures(data);
     } catch (err) {
-      onError(err.message);
+      console.error(err.message);
     }
   };
 
