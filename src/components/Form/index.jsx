@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, FileText, AtSign, Globe, Share2, CheckCircle2, XCircle, Send, Gift } from 'lucide-react';
+import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, FileText,Calculator,Check, AtSign, Globe, Share2, CheckCircle2, XCircle, Send, Gift } from 'lucide-react';
 import axios from 'axios';
 import { LocationSuggestions, ApplicationIDModal } from './LocationSuggestions';
 
@@ -8,7 +8,7 @@ const GodOptions = [
   "Ganesha", "Shiva", "Vishnu", "Krishna", "Rama", "Hanuman", "Durga", "Lakshmi", "Saraswati", "Brahma", "Indra", "Agni", "Varuna", "Vayu", "Yama", "Surya", "Chandra", "Skanda", "Kubera"
 ];
 
-const api = "https://vedic-backend-neon.vercel.app"
+const api = "http://localhost:9000"
 const deployedAPI = "https://vedic-backend-neon.vercel.app"
 
 const CustomNotification = ({ status, message }) => (
@@ -51,7 +51,11 @@ const CustomerForm = () => {
         additionalPreferences: '',
         leadSource: '',
         socialMediaId: '',
-        otherSource: ''
+        otherSource: '',
+        isTwins: 'no',
+        selectedServices: [],
+        totalPrice: 0
+
     });
 
     const [errors, setErrors] = useState({
@@ -66,7 +70,8 @@ const CustomerForm = () => {
         birthplace: false,
         preferredStartingLetterType: false,
         preferredStartingLetter: false,
-        preferredGod: false
+        preferredGod: false,
+        services : false
     });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,7 +81,42 @@ const CustomerForm = () => {
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [applicationId, setApplicationId] = useState('');
   const locationInputRef = useRef(null);
+  const services = [
+    { id: 'astro', name: 'Astrology Service', price: 399 },
+    { id: 'numerology', name: 'Numerology Service', price: 150 }
+  ];
 
+  // Calculate total price when services change
+  const calculateTotalPrice = (selectedServices) => {
+    return selectedServices.reduce((total, service) => {
+      const serviceDetails = services.find(s => s.id === service);
+      return total + (serviceDetails ? serviceDetails.price : 0);
+    }, 0);
+  };
+
+  const handleServiceChange = (serviceId) => {
+    const updatedServices = formData.selectedServices.includes(serviceId)
+      ? formData.selectedServices.filter(id => id !== serviceId)
+      : [...formData.selectedServices, serviceId];
+
+    setFormData(prev => ({
+      ...prev,
+      selectedServices: updatedServices,
+      totalPrice: calculateTotalPrice(updatedServices)
+    }));
+  };
+
+  // Add these fields to your existing formFields array
+  const additionalFormFields = [
+    {
+      icon: <Baby />,
+      label: "Twin Babies",
+      name: "isTwins",
+      type: "select",
+      options: ["no", "yes"],
+      required: true
+    },
+  ];
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -161,7 +201,12 @@ const CustomerForm = () => {
 
     const validateForm = () => {
         let isValid = true;
-
+        if (formData.selectedServices.length === 0) {
+          setErrors(prev => ({ ...prev, services: true }));
+          isValid = false;
+        }
+    
+       
         if (formData.customerName.trim() === '') {
             setErrors(prev => ({ ...prev, customerName: true }));
             isValid = false;
@@ -255,70 +300,72 @@ const CustomerForm = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!validateForm()) {
-            return;
-        }
-
-        setIsSubmitting(true);
-
-    try {
-      const response = await fetch(`${api}/customers/addCustomerWithAssignment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json()
-
-      if (response.ok) {
-        setApplicationId(data.applicationId);
-        setSubmitStatus({
-          success: true,
-          message: `Application submitted successfully!`
-        });
-
-        // Show both notification and modal
-        setShowNotification(true);
-        setTimeout(() => {
-          setShowApplicationModal(true);
-        }, 3000);
-      } else {
-        throw new Error('Submission failed');
+      e.preventDefault();
+  
+      if (!validateForm()) {
+        return;
       }
-    } catch (error) {
-      setSubmitStatus({
-        success: false,
-        message: 'Oops! Something went wrong. Please try again.'
-      });
-    } finally {
-      setIsSubmitting(false);
-
-      // Hide notification after 5 seconds
-      setTimeout(() => setShowNotification(false), 5000);
-
-            setFormData({
-                customerName: '',
-                email: '',
-                whatsappNumber: '',
-                fatherName: '',
-                motherName: '',
-                babyGender: '',
-                babyBirthDate: '',
-                babyBirthTime: '',
-                birthplace: '',
-                preferredStartingLetterType: '',
-                preferredStartingLetter: '',
-                preferredGod: '',
-                referenceName: '',
-                additionalPreferences: '',
-                leadSource: '',
-                socialMediaId: '',
-                otherSource: ''
-            });
+  
+      setIsSubmitting(true);
+  
+      try {
+        const response = await fetch(`${deployedAPI}/customers/addCustomerWithAssignment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+  
+        if (response.ok) {
+          setApplicationId(data.applicationId);
+          setSubmitStatus({
+            success: true,
+            message: `Application submitted successfully!`
+          });
+  
+          // Show both notification and modal
+          setShowNotification(true);
+          setTimeout(() => {
+            setShowApplicationModal(true);
+          }, 3000);
+  
+          // Reset form data
+          setFormData({
+            customerName: '',
+            email: '',
+            whatsappNumber: '',
+            fatherName: '',
+            motherName: '',
+            babyGender: '',
+            babyBirthDate: '',
+            babyBirthTime: '',
+            birthplace: '',
+            preferredStartingLetterType: '',
+            preferredStartingLetter: '',
+            preferredGod: '',
+            referenceName: '',
+            additionalPreferences: '',
+            leadSource: '',
+            socialMediaId: '',
+            otherSource: '',
+            isTwins: '',
+            selectedServices: [],
+            totalPrice: 0
+          });
+        } else {
+          throw new Error('Submission failed');
         }
+      } catch (error) {
+        setSubmitStatus({
+          success: false,
+          message: 'Oops! Something went wrong. Please try again.'
+        });
+      } finally {
+        setIsSubmitting(false);
+        setTimeout(() => setShowNotification(false), 5000);
+      }
     };
 
     const features = [
@@ -357,6 +404,94 @@ const CustomerForm = () => {
     { icon: <Users />, label: "Reference Name (if any)", name: "referenceName", type: "text", placeholder: "Enter Reference Name" },
     { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter Additional Preferences" },
   ];
+  const ServiceSelection = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="col-span-2 mt-6 p-6 bg-purple-50 rounded-xl"
+    >
+      <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+        <Calculator className="w-6 h-6 text-purple-600" />
+        Select Services
+        <span className="text-red-600 ml-1">*</span>
+      </h3>
+      
+      <div className="space-y-4">
+        {services.map((service) => (
+          <motion.div
+            key={service.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.01 }}
+            className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer"
+            onClick={() => handleServiceChange(service.id)}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                  formData.selectedServices.includes(service.id)
+                    ? 'bg-purple-600 border-purple-600'
+                    : 'border-gray-300 hover:border-purple-400'
+                }`}
+              >
+                {formData.selectedServices.includes(service.id) && (
+                  <Check className="w-4 h-4 text-white" />
+                )}
+              </div>
+              <div>
+                <span className="font-medium">{service.name}</span>
+                <p className="text-sm text-gray-500">
+                  {service.id === 'astro' 
+                    ? 'Complete astrological analysis and name suggestions'
+                    : 'Numerological compatibility and name analysis'
+                  }
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-purple-600 font-semibold">₹{service.price}</span>
+              <p className="text-xs text-gray-500">Including GST</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+      
+      {errors.services && (
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-red-600 text-sm mt-2"
+        >
+          Please select at least one service
+        </motion.div>
+      )}
+
+      {formData.selectedServices.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6 p-4 bg-white rounded-lg shadow-sm border-2 border-purple-100"
+        >
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="font-semibold text-gray-700">Total Amount</span>
+              <p className="text-xs text-gray-500">Services selected: {formData.selectedServices.length}</p>
+            </div>
+            <div className="text-right">
+              <span className="text-2xl font-bold text-purple-600">₹{formData.totalPrice}</span>
+              <p className="text-xs text-gray-500">Including GST</p>
+            </div>
+          </div>
+          {formData.selectedServices.length === 2 && (
+            <div className="mt-2 text-sm text-green-600 flex items-center gap-1">
+              <Check className="w-4 h-4" />
+              <span>You've selected both services for comprehensive analysis!</span>
+            </div>
+          )}
+        </motion.div>
+      )}
+    </motion.div>
+  );
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
@@ -605,7 +740,59 @@ const CustomerForm = () => {
                 )}
               </motion.div>
             ))}
-          </div>
+
+            {/* New Twin Babies field */}
+{additionalFormFields.map((field, index) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    className="relative col-span-2 md:col-span-1"
+  >
+    <div className="flex items-center space-x-2 mb-2">
+      {field.icon}
+      <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
+        {field.label}
+        {field.required && <span className="text-red-600 ml-1">*</span>}
+      </label>
+    </div>
+    <div className="relative">
+      <select
+        name={field.name}
+        value={formData[field.name]}
+        onChange={handleChange}
+        className={`w-full p-3 border ${
+          errors[field.name] 
+            ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
+            : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+        } rounded-lg transition-all`}
+      >
+        <option value="">Select Option</option>
+        {field.options.map((option) => (
+          <option key={option} value={option}>
+            {option.charAt(0).toUpperCase() + option.slice(1)}
+          </option>
+        ))}
+      </select>
+    </div>
+    {errors[field.name] && (
+      <motion.div
+        initial={{ opacity: 0, y: 5 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="text-red-600 text-sm mt-2"
+      >
+        {`${field.label} is required`}
+      </motion.div>
+    )}
+  </motion.div>
+))}
+</div>
+
+{/* Service Selection Component */}
+<ServiceSelection />
+          
 
                     <motion.button
                         whileHover={{ scale: 1.02 }}
