@@ -310,7 +310,7 @@ const CustomerForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${deployedAPI}/customers/addCustomerWithAssignment`, {
+      const response = await fetch(`${api}/customers/addCustomerWithAssignment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -490,7 +490,7 @@ const CustomerForm = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+    <div className="min-h-screen bg-[#FBF5DD]">
       <AnimatePresence>
         {isSubmitting && (
           <motion.div
@@ -503,7 +503,7 @@ const CustomerForm = () => {
               id="paper-plane"
               className="transition-all duration-1000 ease-in-out"
             >
-              <Send className="w-16 h-16 text-purple-600" />
+              <Send className="w-16 h-16 text-[#D84040]" />
             </motion.div>
             <motion.div
               className="from-purple-100/50 to-transparent"
@@ -576,7 +576,7 @@ const CustomerForm = () => {
         transition={{ duration: 0.8 }}
         className="text-center py-16 px-4"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#8E1616] mb-4">
           Find the Perfect Name for Your Little One
         </h1>
         <h1 className="text-xl md:text-2xl font-semibold text-slate-800 mb-4">
@@ -793,7 +793,7 @@ const CustomerForm = () => {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={isSubmitting}
-            className={`w-full mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-medium transition-all ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-700 hover:to-indigo-700'}`}
+            className={`w-full mt-8 bg-[#D84040] text-white py-3 rounded-lg font-medium transition-all ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-700 hover:to-indigo-700'}`}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Application'}
           </motion.button>
@@ -801,28 +801,28 @@ const CustomerForm = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-50 py-12">
+      <footer className="bg-[#D84040] text-[#EDF4C2] py-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
               <h3 className="text-lg font-semibold mb-4">About Us</h3>
-              <p className="text-gray-600">We specialize in providing meaningful Vedic names for your little ones, ensuring each name carries profound significance and positive energy.</p>
+              <p className="text-white">We specialize in providing meaningful Vedic names for your little ones, ensuring each name carries profound significance and positive energy.</p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <p className="text-gray-600">Email: support@vedicnames.com</p>
-              <p className="text-gray-600">Phone: +1 (555) 123-4567</p>
+              <p className="text-white">Email: support@vedicnames.com</p>
+              <p className="text-white">Phone: +1 (555) 123-4567</p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
               <div className="flex justify-center md:justify-start space-x-4">
-                <a href="#" className="text-gray-600 hover:text-purple-600">Facebook</a>
-                <a href="#" className="text-gray-600 hover:text-purple-600">Instagram</a>
-                <a href="#" className="text-gray-600 hover:text-purple-600">Twitter</a>
+                <a href="#" className="text-white hover:text-[#EDF4C2]">Facebook</a>
+                <a href="#" className="text-white hover:text-[#EDF4C2]">Instagram</a>
+                <a href="#" className="text-white hover:text-[#EDF4C2]">Twitter</a>
               </div>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center text-gray-600">
+          <div className="mt-8 pt-8 border-t border-gray-200 text-center text-[#EDF4C2]">
             <p>&copy; 2024 Vedic Name Services. All rights reserved.</p>
           </div>
         </div>
