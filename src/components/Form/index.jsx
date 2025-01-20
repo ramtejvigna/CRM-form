@@ -623,182 +623,197 @@ const CustomerForm = () => {
       </AnimatePresence>
 
       {/* Form Section */}
-      <div className="max-w-4xl mx-auto px-4 pb-16">
-        <motion.form
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-xl p-8"
+      <div className="w-full min-h-screen p-4 md:p-0">
+  <motion.form
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.8 }}
+    onSubmit={handleSubmit}
+    className="bg-white rounded-2xl shadow-xl p-4 md:p-8 max-w-4xl mx-auto"
+  >
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      {formFields.map((field, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          className="relative"
         >
-          <div className="grid md:grid-cols-2 gap-6">
-            {formFields.map((field, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative"
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="text-purple-600">{field.icon}</span>
+            <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
+              {field.label}
+              {field.required && <span className="text-red-600 ml-1">*</span>}
+            </label>
+          </div>
+          <div className="relative">
+            {field.type === "select" ? (
+              <select
+                name={field.name}
+                value={formData[field.name]}
+                onChange={handleChange}
+                className={`w-full p-2 md:p-3 text-sm md:text-base border ${
+                  errors[field.name] 
+                    ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
+                    : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+                } rounded-lg transition-all`}
               >
-                <div className="flex items-center space-x-2 mb-2">
-                  {field.icon}
-                  <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
-                    {field.label}
-                    {field.required && <span className="text-red-600 ml-1">*</span>}
-                  </label>
-                </div>
-                <div className="relative">
-                  {field.type === "select" ? (
-                    <select
-                      name={field.name}
-                      value={formData[field.name]}
-                      onChange={handleChange}
-                      className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
-                    >
-                      <option value="">
-                        {field.name === "babyGender" ? "Select Baby Gender" : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type" : field.name === "preferredGod" ? "Select Preferred God" : "Select Platform"}
-                      </option>
-                      {(field.name === "preferredGod" ? GodOptions : field.options).map((option) => (
-                        <option key={option} value={option}>{option}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <div className="relative">
-                      <input
-                        type={field.type}
-                        name={field.name}
-                        ref={field.name === 'birthplace' ? locationInputRef : null}
-                        value={formData[field.name]}
-                        onChange={field.name === 'birthplace' ? handleLocationInput : handleChange}
-                        placeholder={field.placeholder}
-                        maxLength={field.name === 'whatsappNumber' ? 10 : undefined}
-                        pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
-                        inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
-                        className={`w-full p-3 border ${errors[field.name] ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
-                      />
-                    </div>
-                  )}
-                </div>
-                {field.name === 'birthplace' && locationSuggestions.length > 0 && (
-                  <LocationSuggestions
-                    suggestions={locationSuggestions}
-                    onSelectSuggestion={selectLocationSuggestion}
-                    inputRef={locationInputRef}
-                  />
-                )}
-
-                {field.name === "preferredStartingLetterType" && formData.preferredStartingLetterType === 'Alphabet Based' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="relative mt-4"
-                  >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <FileText className="w-5 h-5 text-purple-600" />
-                      <label className="text-sm font-medium text-gray-700">
-                        Preferred Starting Letter
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      name="preferredStartingLetter"
-                      value={formData.preferredStartingLetter}
-                      onChange={handleChange}
-                      placeholder="Enter preferred starting letter"
-                      className={`w-full p-3 border ${errors.preferredStartingLetter ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'} rounded-lg transition-all`}
-                    />
-                    {errors.preferredStartingLetter && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-red-600 text-sm mt-2"
-                      >
-                        Preferred starting letter is required
-                      </motion.div>
-                    )}
-                  </motion.div>
-                )}
-
-
-
-                {errors[field.name] && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-red-600 text-sm mt-2"
-                  >
-                    {`${field.label} is required`}
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
-
-            {/* New Twin Babies field */}
-            {additionalFormFields.map((field, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative col-span-2 md:col-span-1"
-              >
-                <div className="flex items-center space-x-2 mb-2">
-                  {field.icon}
-                  <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
-                    {field.label}
-                    {field.required && <span className="text-red-600 ml-1">*</span>}
-                  </label>
-                </div>
-                <div className="relative">
-                  <select
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    className={`w-full p-3 border ${errors[field.name]
-                      ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent'
+                <option value="">
+                  {field.name === "babyGender" ? "Select Baby Gender" 
+                    : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type" 
+                    : field.name === "preferredGod" ? "Select Preferred God" 
+                    : "Select Platform"}
+                </option>
+                {(field.name === "preferredGod" ? GodOptions : field.options).map((option) => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            ) : (
+              <div className="relative">
+                <input
+                  type={field.type}
+                  name={field.name}
+                  ref={field.name === 'birthplace' ? locationInputRef : null}
+                  value={formData[field.name]}
+                  onChange={field.name === 'birthplace' ? handleLocationInput : handleChange}
+                  placeholder={field.placeholder}
+                  maxLength={field.name === 'whatsappNumber' ? 10 : undefined}
+                  pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
+                  inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
+                  className={`w-full p-2 md:p-3 text-sm md:text-base border ${
+                    errors[field.name] 
+                      ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
                       : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
-                      } rounded-lg transition-all`}
-                  >
-                    <option value="">Select Option</option>
-                    {field.options.map((option) => (
-                      <option key={option} value={option}>
-                        {option.charAt(0).toUpperCase() + option.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {errors[field.name] && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-red-600 text-sm mt-2"
-                  >
-                    {`${field.label} is required`}
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
+                  } rounded-lg transition-all`}
+                />
+              </div>
+            )}
           </div>
 
-          {/* Service Selection Component */}
-          <ServiceSelection />
+          {field.name === 'birthplace' && locationSuggestions.length > 0 && (
+            <LocationSuggestions
+              suggestions={locationSuggestions}
+              onSelectSuggestion={selectLocationSuggestion}
+              inputRef={locationInputRef}
+            />
+          )}
 
+          {field.name === "preferredStartingLetterType" && 
+           formData.preferredStartingLetterType === 'Alphabet Based' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative mt-4"
+            >
+              <div className="flex items-center space-x-2 mb-2">
+                <FileText className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
+                <label className="text-sm font-medium text-gray-700">
+                  Preferred Starting Letter
+                </label>
+              </div>
+              <input
+                type="text"
+                name="preferredStartingLetter"
+                value={formData.preferredStartingLetter}
+                onChange={handleChange}
+                placeholder="Enter preferred starting letter"
+                className={`w-full p-2 md:p-3 text-sm md:text-base border ${
+                  errors.preferredStartingLetter 
+                    ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
+                    : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+                } rounded-lg transition-all`}
+              />
+              {errors.preferredStartingLetter && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-red-600 text-xs md:text-sm mt-2"
+                >
+                  Preferred starting letter is required
+                </motion.div>
+              )}
+            </motion.div>
+          )}
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full mt-8 bg-[#D84040] text-white py-3 rounded-lg font-medium transition-all ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-700 hover:to-indigo-700'}`}
+          {errors[field.name] && (
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-red-600 text-xs md:text-sm mt-2"
+            >
+              {`${field.label} is required`}
+            </motion.div>
+          )}
+        </motion.div>
+      ))}
+
+      {/* Additional Form Fields */}
+      {additionalFormFields.map((field, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          className="relative col-span-1 md:col-span-1"
+        >
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="text-purple-600">{field.icon}</span>
+            <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
+              {field.label}
+              {field.required && <span className="text-red-600 ml-1">*</span>}
+            </label>
+          </div>
+          <select
+            name={field.name}
+            value={formData[field.name]}
+            onChange={handleChange}
+            className={`w-full p-2 md:p-3 text-sm md:text-base border ${
+              errors[field.name]
+                ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent'
+                : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+            } rounded-lg transition-all`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Application'}
-          </motion.button>
-        </motion.form>
-      </div>
+            <option value="">Select Option</option>
+            {field.options.map((option) => (
+              <option key={option} value={option}>
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </option>
+            ))}
+          </select>
+          {errors[field.name] && (
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-red-600 text-xs md:text-sm mt-2"
+            >
+              {`${field.label} is required`}
+            </motion.div>
+          )}
+        </motion.div>
+      ))}
+    </div>
+
+    {/* Service Selection Component */}
+    <ServiceSelection />
+
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      type="submit"
+      disabled={isSubmitting}
+      className={`w-full mt-6 md:mt-8 bg-[#D84040] text-white py-2 md:py-3 text-sm md:text-base rounded-lg font-medium transition-all ${
+        isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-700 hover:to-indigo-700'
+      }`}
+    >
+      {isSubmitting ? 'Submitting...' : 'Submit Application'}
+    </motion.button>
+  </motion.form>
+</div>
 
       {/* Footer */}
       <footer className="bg-[#1D1616] text-[#EDF4C2] py-12">
