@@ -490,7 +490,7 @@ const CustomerForm = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#FBF5DD]">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <AnimatePresence>
         {isSubmitting && (
           <motion.div
@@ -576,7 +576,7 @@ const CustomerForm = () => {
         transition={{ duration: 0.8 }}
         className="text-center py-16 px-4"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-[#8E1616] mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-4">
           Find the Perfect Name for Your Little One
         </h1>
         <h1 className="text-xl md:text-2xl font-semibold text-slate-800 mb-4">
@@ -801,7 +801,7 @@ const CustomerForm = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#D84040] text-[#EDF4C2] py-12">
+      <footer className="bg-[#1D1616] text-[#EDF4C2] py-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
