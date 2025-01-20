@@ -810,15 +810,14 @@ const CustomerForm = () => {
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <p className="text-white">Email: support@vedicnames.com</p>
-              <p className="text-white">Phone: +1 (555) 123-4567</p>
+              <p className="text-white">Email: Selectbabyname.in@gmail.com</p>
+              <p className="text-white">Phone: +91 9699190301</p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
               <div className="flex justify-center md:justify-start space-x-4">
-                <a href="#" className="text-white hover:text-[#EDF4C2]">Facebook</a>
-                <a href="#" className="text-white hover:text-[#EDF4C2]">Instagram</a>
-                <a href="#" className="text-white hover:text-[#EDF4C2]">Twitter</a>
+                <a href="https://www.instagram.com/selectbabyname/" className="text-white hover:text-[#EDF4C2]">Facebook</a>
+                <a href="https://www.facebook.com/selctbabyname/" className="text-white hover:text-[#EDF4C2]">Instagram</a>
               </div>
             </div>
           </div>
