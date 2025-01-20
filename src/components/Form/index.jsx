@@ -310,7 +310,7 @@ const CustomerForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${api}/customers/addCustomerWithAssignment`, {
+      const response = await fetch(`${deployedAPI}/customers/addCustomerWithAssignment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
