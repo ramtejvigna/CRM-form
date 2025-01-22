@@ -823,8 +823,8 @@ const CustomerForm = () => {
 </div>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-400 text-gray-800">
-      <div className="max-w-6xl mx-auto px-4 py-16">
+      <footer className="bg-gradient-to-r from-yellow-600 via-amber-300 to-yellow-500 text-gray-800 mt-9">
+      <div className="max-w-6xl mx-auto px-4 py-5">
         {/* Main Content */}
         <div className="grid md:grid-cols-3 gap-12">
           {/* About Section */}
