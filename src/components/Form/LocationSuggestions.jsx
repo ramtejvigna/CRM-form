@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-import { CheckCircle2, X, Copy } from 'lucide-react';
-
 
 export const LocationSuggestions = ({
   suggestions,
@@ -45,7 +43,7 @@ export const LocationSuggestions = ({
             exit={{ opacity: 0, y: -10 }}
             className="relative mt-1 z-50"
           >
-            <div className="bg-white border border-purple-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+            <div className="bg-white border border-yellow-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
               {suggestions.map((suggestion, index) => (
                 <motion.div
                   key={index}
@@ -53,21 +51,21 @@ export const LocationSuggestions = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
                   transition={{ duration: 0.2, delay: index * 0.05 }}
-                  className="px-4 py-3 cursor-pointer hover:bg-purple-50 transition-colors group border-b last:border-b-0 border-purple-100 flex items-center justify-between"
+                  className="px-4 py-3 cursor-pointer hover:bg-yellow-50 transition-colors group border-b last:border-b-0 border-yellow-100 flex items-center justify-between"
                   onClick={() => {
                     onSelectSuggestion(suggestion);
                     setIsVisible(false);
                   }}
                 >
                   <div>
-                    <p className="text-sm font-medium text-purple-800 group-hover:text-purple-900">
+                    <p className="text-sm font-medium text-yellow-800 group-hover:text-yellow-900">
                       {suggestion.PlaceName}
                     </p>
-                    <p className="text-xs text-purple-500 group-hover:text-purple-600">
+                    <p className="text-xs text-yellow-500 group-hover:text-yellow-600">
                       {suggestion.Type}
                     </p>
                   </div>
-                  <MapPin className="w-5 h-5 text-purple-400 group-hover:text-purple-600 transition-colors" />
+                  <MapPin className="w-5 h-5 text-yellow-400 group-hover:text-yellow-600 transition-colors" />
                 </motion.div>
               ))}
             </div>
@@ -79,8 +77,6 @@ export const LocationSuggestions = ({
 };
 
 
-
-// Application ID Modal Component
 export const ApplicationIDModal = ({
   applicationId,
   onClose
@@ -121,12 +117,12 @@ export const ApplicationIDModal = ({
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="mb-6 bg-purple-50 rounded-full p-4 inline-block"
+            className="mb-6 bg-yellow-50 rounded-full p-4 inline-block"
           >
-            <CheckCircle2 className="w-12 h-12 text-purple-600" />
+            <CheckCircle2 className="w-12 h-12 text-yellow-600" />
           </motion.div>
 
-          <h2 className="text-2xl font-bold text-purple-900 mb-4">
+          <h2 className="text-2xl font-bold text-yellow-900 mb-4">
             Application Submitted Successfully!
           </h2>
 
@@ -135,18 +131,18 @@ export const ApplicationIDModal = ({
           </p>
 
           <motion.div
-            className="bg-purple-100 rounded-lg p-4 flex items-center justify-between mb-6"
+            className="bg-yellow-100 rounded-lg p-4 flex items-center justify-between mb-6"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <span className="text-purple-900 font-semibold tracking-wider">
+            <span className="text-yellow-900 font-semibold tracking-wider">
               {applicationId}
             </span>
             <motion.button
               onClick={copyToClipboard}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="text-purple-600 hover:text-purple-800 transition-colors"
+              className="text-yellow-600 hover:text-yellow-800 transition-colors"
             >
               {isCopied ? (
                 <motion.div
@@ -167,7 +163,7 @@ export const ApplicationIDModal = ({
             onClick={onClose}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all"
+            className="w-full bg-gradient-to-r from-yellow-600 to-yellow-600 text-white py-3 rounded-lg font-medium hover:from-yellow-700 hover:to-yellow-700 transition-all"
           >
             Close
           </motion.button>
@@ -176,4 +172,3 @@ export const ApplicationIDModal = ({
     </motion.div>
   );
 };
-
