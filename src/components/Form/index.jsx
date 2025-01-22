@@ -3,10 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Baby, Star, Clock, MapPin, Mail, Phone, User, Users, FileText, Calculator, Check, AtSign, Globe, Share2, CheckCircle2, XCircle, Send, Gift } from 'lucide-react';
 import axios from 'axios';
 import { LocationSuggestions, ApplicationIDModal } from './LocationSuggestions';
+import { Instagram, Facebook } from 'lucide-react';
 
 const GodOptions = [
   "Ganesha", "Shiva", "Vishnu", "Krishna", "Rama", "Hanuman", "Durga", "Lakshmi", "Saraswati", "Brahma", "Indra", "Agni", "Varuna", "Vayu", "Yama", "Surya", "Chandra", "Skanda", "Kubera"
 ];
+const theme = {
+  primary: '#FFB800',
+  secondary: '#FFE5A3',
+  accent: '#FFDB4D',
+  background: '#FFF8E7',
+  text: '#4A4026',
+  border: '#FFD700'
+};
 
 const api = "http://localhost:9000"
 const deployedAPI = "https://vedic-backend-neon.vercel.app"
@@ -207,7 +216,6 @@ const CustomerForm = () => {
       isValid = false;
     }
 
-
     if (formData.customerName.trim() === '') {
       setErrors(prev => ({ ...prev, customerName: true }));
       isValid = false;
@@ -400,15 +408,14 @@ const CustomerForm = () => {
     { icon: <FileText />, label: "Additional Preferences", name: "additionalPreferences", type: "text", placeholder: "Enter Additional Preferences" },
   ];
 
-
   const ServiceSelection = () => (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="col-span-2 mt-6 p-6 bg-purple-50 rounded-xl"
+      className="col-span-2 mt-6 p-6 bg-yellow-50 rounded-xl"
     >
       <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <Calculator className="w-6 h-6 text-purple-600" />
+        <Calculator className="w-6 h-6 text-yellow-600" />
         Select Services
         <span className="text-red-600 ml-1">*</span>
       </h3>
@@ -426,8 +433,8 @@ const CustomerForm = () => {
             <div className="flex items-center gap-3">
               <div
                 className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${formData.selectedServices.includes(service.id)
-                  ? 'bg-purple-600 border-purple-600'
-                  : 'border-gray-300 hover:border-purple-400'
+                  ? 'bg-yellow-600 border-yellow-600'
+                  : 'border-gray-300 hover:border-yellow-400'
                   }`}
               >
                 {formData.selectedServices.includes(service.id) && (
@@ -445,7 +452,7 @@ const CustomerForm = () => {
               </div>
             </div>
             <div className="text-right">
-              <span className="text-purple-600 font-semibold">₹{service.price}</span>
+              <span className="text-yellow-600 font-semibold">₹{service.price}</span>
               <p className="text-xs text-gray-500">Including GST</p>
             </div>
           </motion.div>
@@ -466,7 +473,7 @@ const CustomerForm = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-6 p-4 bg-white rounded-lg shadow-sm border-2 border-purple-100"
+          className="mt-6 p-4 bg-white rounded-lg shadow-sm border-2 border-yellow-100"
         >
           <div className="flex justify-between items-center">
             <div>
@@ -474,7 +481,7 @@ const CustomerForm = () => {
               <p className="text-xs text-gray-500">Services selected: {formData.selectedServices.length}</p>
             </div>
             <div className="text-right">
-              <span className="text-2xl font-bold text-purple-600">₹{formData.totalPrice}</span>
+              <span className="text-2xl font-bold text-yellow-600">₹{formData.totalPrice}</span>
               <p className="text-xs text-gray-500">Including GST</p>
             </div>
           </div>
@@ -490,7 +497,7 @@ const CustomerForm = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-white">
       <AnimatePresence>
         {isSubmitting && (
           <motion.div
@@ -506,7 +513,7 @@ const CustomerForm = () => {
               <Send className="w-16 h-16 text-[#D84040]" />
             </motion.div>
             <motion.div
-              className="from-purple-100/50 to-transparent"
+              className="from-yellow-100/50 to-transparent"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -528,7 +535,7 @@ const CustomerForm = () => {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                    className="w-3 h-3 bg-purple-600 rounded-full"
+                    className="w-3 h-3 bg-yellow-600 rounded-full"
                   />
                   <motion.div
                     animate={{
@@ -540,7 +547,7 @@ const CustomerForm = () => {
                       ease: "easeInOut",
                       delay: 0.2,
                     }}
-                    className="w-3 h-3 bg-purple-600 rounded-full"
+                    className="w-3 h-3 bg-yellow-600 rounded-full"
                   />
                   <motion.div
                     animate={{
@@ -552,14 +559,14 @@ const CustomerForm = () => {
                       ease: "easeInOut",
                       delay: 0.4,
                     }}
-                    className="w-3 h-3 bg-purple-600 rounded-full"
+                    className="w-3 h-3 bg-yellow-600 rounded-full"
                   />
                 </div>
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="mt-4 text-2xl font-medium text-purple-600"
+                  className="mt-4 text-2xl font-medium text-yellow-600"
                 >
                   Sending your application...
                 </motion.p>
@@ -576,7 +583,7 @@ const CustomerForm = () => {
         transition={{ duration: 0.8 }}
         className="text-center py-16 px-4"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-yellow-900 mb-4">
           Find the Perfect Name for Your Little One
         </h1>
         <h1 className="text-xl md:text-2xl font-semibold text-slate-800 mb-4">
@@ -641,7 +648,7 @@ const CustomerForm = () => {
           className="relative"
         >
           <div className="flex items-center space-x-2 mb-2">
-            <span className="text-purple-600">{field.icon}</span>
+            <span className="text-yellow-600">{field.icon}</span>
             <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
               {field.label}
               {field.required && <span className="text-red-600 ml-1">*</span>}
@@ -654,15 +661,15 @@ const CustomerForm = () => {
                 value={formData[field.name]}
                 onChange={handleChange}
                 className={`w-full p-2 md:p-3 text-sm md:text-base border ${
-                  errors[field.name] 
-                    ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
-                    : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+                  errors[field.name]
+                    ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent'
+                    : 'border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent'
                 } rounded-lg transition-all`}
               >
                 <option value="">
-                  {field.name === "babyGender" ? "Select Baby Gender" 
-                    : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type" 
-                    : field.name === "preferredGod" ? "Select Preferred God" 
+                  {field.name === "babyGender" ? "Select Baby Gender"
+                    : field.name === "preferredStartingLetterType" ? "Select Starting Letter Type"
+                    : field.name === "preferredGod" ? "Select Preferred God"
                     : "Select Platform"}
                 </option>
                 {(field.name === "preferredGod" ? GodOptions : field.options).map((option) => (
@@ -682,9 +689,9 @@ const CustomerForm = () => {
                   pattern={field.name === 'whatsappNumber' ? '[0-9]*' : undefined}
                   inputMode={field.name === 'whatsappNumber' ? 'numeric' : undefined}
                   className={`w-full p-2 md:p-3 text-sm md:text-base border ${
-                    errors[field.name] 
-                      ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+                    errors[field.name]
+                      ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent'
+                      : 'border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent'
                   } rounded-lg transition-all`}
                 />
               </div>
@@ -699,7 +706,7 @@ const CustomerForm = () => {
             />
           )}
 
-          {field.name === "preferredStartingLetterType" && 
+          {field.name === "preferredStartingLetterType" &&
            formData.preferredStartingLetterType === 'Alphabet Based' && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -708,7 +715,7 @@ const CustomerForm = () => {
               className="relative mt-4"
             >
               <div className="flex items-center space-x-2 mb-2">
-                <FileText className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
+                <FileText className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
                 <label className="text-sm font-medium text-gray-700">
                   Preferred Starting Letter
                 </label>
@@ -720,9 +727,9 @@ const CustomerForm = () => {
                 onChange={handleChange}
                 placeholder="Enter preferred starting letter"
                 className={`w-full p-2 md:p-3 text-sm md:text-base border ${
-                  errors.preferredStartingLetter 
-                    ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent' 
-                    : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+                  errors.preferredStartingLetter
+                    ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent'
+                    : 'border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent'
                 } rounded-lg transition-all`}
               />
               {errors.preferredStartingLetter && (
@@ -761,7 +768,7 @@ const CustomerForm = () => {
           className="relative col-span-1 md:col-span-1"
         >
           <div className="flex items-center space-x-2 mb-2">
-            <span className="text-purple-600">{field.icon}</span>
+            <span className="text-yellow-600">{field.icon}</span>
             <label className={`text-sm font-medium ${field.required ? 'text-slate-800' : 'text-gray-700'}`}>
               {field.label}
               {field.required && <span className="text-red-600 ml-1">*</span>}
@@ -774,7 +781,7 @@ const CustomerForm = () => {
             className={`w-full p-2 md:p-3 text-sm md:text-base border ${
               errors[field.name]
                 ? 'border-red-300 focus:ring-2 focus:ring-red-400 focus:border-transparent'
-                : 'border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent'
+                : 'border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent'
             } rounded-lg transition-all`}
           >
             <option value="">Select Option</option>
@@ -807,7 +814,7 @@ const CustomerForm = () => {
       type="submit"
       disabled={isSubmitting}
       className={`w-full mt-6 md:mt-8 bg-[#D84040] text-white py-2 md:py-3 text-sm md:text-base rounded-lg font-medium transition-all ${
-        isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-purple-700 hover:to-indigo-700'
+        isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-yellow-700 hover:to-yellow-700'
       }`}
     >
       {isSubmitting ? 'Submitting...' : 'Submit Application'}
@@ -816,31 +823,63 @@ const CustomerForm = () => {
 </div>
 
       {/* Footer */}
-      <footer className="bg-[#1D1616] text-[#EDF4C2] py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">About Us</h3>
-              <p className="text-white">We specialize in providing meaningful Vedic names for your little ones, ensuring each name carries profound significance and positive energy.</p>
+      <footer className="bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-400 text-gray-800">
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        {/* Main Content */}
+        <div className="grid md:grid-cols-3 gap-12">
+          {/* About Section */}
+          <div className="transform hover:scale-105 transition-transform duration-300">
+            <div className="bg-yellow-50 rounded-lg p-6 shadow-lg h-full">
+              <h3 className="text-xl font-bold mb-4 text-amber-800">About Us</h3>
+              <p className="text-amber-900">
+                We specialize in providing meaningful Vedic names for your little ones, ensuring each name carries profound significance and positive energy.
+              </p>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <p className="text-white">Email: Selectbabyname.in@gmail.com</p>
-              <p className="text-white">Phone: +91 9699190301</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-              <div className="flex justify-center md:justify-start space-x-4">
-                <a href="https://www.instagram.com/selectbabyname/" className="text-white hover:text-[#EDF4C2]">Facebook</a>
-                <a href="https://www.facebook.com/selctbabyname/" className="text-white hover:text-[#EDF4C2]">Instagram</a>
+          </div>
+
+          {/* Contact Section */}
+          <div className="transform hover:scale-105 transition-transform duration-300">
+            <div className="bg-yellow-50 rounded-lg p-6 shadow-lg h-full">
+              <h3 className="text-xl font-bold mb-4 text-amber-800">Contact</h3>
+              <div className="space-y-3">
+                <a href="mailto:Selectbabyname.in@gmail.com" 
+                   className="flex items-center space-x-2 text-amber-900 hover:text-amber-600 transition-colors duration-300">
+                  <Mail size={18} />
+                  <span>Selectbabyname.in@gmail.com</span>
+                </a>
+                <a href="tel:+919699190301" 
+                   className="flex items-center space-x-2 text-amber-900 hover:text-amber-600 transition-colors duration-300">
+                  <Phone size={18} />
+                  <span>+91 9699190301</span>
+                </a>
               </div>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center text-[#EDF4C2]">
-            <p>&copy; 2024 Vedic Name Services. All rights reserved.</p>
+
+          {/* Social Section */}
+          <div className="transform hover:scale-105 transition-transform duration-300">
+            <div className="bg-yellow-50 rounded-lg p-6 shadow-lg h-full">
+              <h3 className="text-xl font-bold mb-4 text-amber-800">Follow Us</h3>
+              <div className="flex justify-center md:justify-start space-x-6">
+                <a href="https://www.facebook.com/selctbabyname/" 
+                   className="group">
+                  <Facebook className="w-8 h-8 text-amber-900 group-hover:text-amber-600 transform group-hover:scale-110 transition-all duration-300" />
+                </a>
+                <a href="https://www.instagram.com/selectbabyname/" 
+                   className="group">
+                  <Instagram className="w-8 h-8 text-amber-900 group-hover:text-amber-600 transform group-hover:scale-110 transition-all duration-300" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-      </footer>
+
+        {/* Copyright */}
+        <div className="mt-12 pt-8 border-t border-amber-400 text-center">
+          <p className="text-amber-900">&copy; 2024 Vedic Name Services. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
       <AnimatePresence>
         {showApplicationModal && (
           <ApplicationIDModal
