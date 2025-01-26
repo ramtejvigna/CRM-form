@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin } from 'lucide-react';
+import { MapPin, X } from 'lucide-react';
 
 export const LocationSuggestions = ({
   suggestions,
